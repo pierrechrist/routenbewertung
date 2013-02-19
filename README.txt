@@ -1,0 +1,1 @@
+Bachelorprojekt zur Kollaborativen Bewertung von Kletterrouten mittels Android App
