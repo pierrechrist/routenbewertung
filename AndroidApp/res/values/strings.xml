@@ -2,7 +2,39 @@
 <resources>
 
     <string name="app_name">DAV Routenbewerter</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="accept_button">Bestätigen</string>
+    <string name="cancel_button">Abbrechen</string>
+    <string name="flashcount">Flash:</string>
+    <string name="rotpunktcount">Rotpunkt:</string>
+    <string name="notclimbedcount">Nicht geklettert:</string>
+     
+    <string name="login_title">Login</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="register_title">Register</string>
+    <string name="register_name">Username:</string>
+    <string name="register_email">eMail:</string>
+    <string name="register_password1">Passwort:</string>
+    <string name="register_password2">Passwort wiederholen:</string>
+    <string name="menu_title">Main Menü</string>
+    <string name="personal_button">Persönliche Statistik</string>
+    <string name="routes_button">Routen Liste</string>
+    <string name="personal_title">Persönliche Statistik</string>
+    <string name="routelist_title">Routen Liste</string>
+    <string name="routedetails_title">Routendetails #</string>
+    <string name="rateroute_title">Routenbewertung</string>
+    <string name="personal_username">Benutzername:</string>
+    <string name="personal_routecount">Routen Gesamt:</string>
+    <string name="routedetails_wallname">Wand:</string>
+    <string name="routedetails_handlecolor">Grifffarbe:</string>
+    <string name="routedetails_routedriver">Routenschrauber:</string>
+    <string name="routedetails_creationdate">Erstelldatum:</string>
+    <string name="routedetails_avaragerating">Schwierigkeitsgrad:</string>
+    <string name="routedetails_avaragecategorie">Kategorie:</string>
+    <string name="rateroute_button">Route bewerten</string>
+    <string name="rateroute_rating">Bewertung:</string>
+    <string name="rateroute_climbed">wie geklettert:</string>
+    <string name="rateroute_categorie">Kategorie:</string>
 
 </resources>
