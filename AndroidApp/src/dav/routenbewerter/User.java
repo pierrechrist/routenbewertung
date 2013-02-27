@@ -1,13 +1,42 @@
-package com.dav.routenbewerter;
+package dav.routenbewerter;
+
+import java.util.List;
 
 public class User {
 
 	String eMail;
-	String UserName;
+	String userName;
+	String password;
 	int allRouteCount;
 	int flashRouteCount;
 	int rotpunktRouteCount;
 	int notClimbedRouteCount;
+	List<Rating> ratings;
+	
+	
+	public User(String eMail, String userName, int allRouteCount,
+			int flashRouteCount, int rotpunktRouteCount,
+			int notClimbedRouteCount, List<Rating> ratings) {
+		super();
+		this.eMail = eMail;
+		this.userName = userName;
+		this.allRouteCount = allRouteCount;
+		this.flashRouteCount = flashRouteCount;
+		this.rotpunktRouteCount = rotpunktRouteCount;
+		this.notClimbedRouteCount = notClimbedRouteCount;
+		this.ratings = ratings;
+	}
+	public User(String eMail, String userName, String password) {
+		super();
+		this.eMail = eMail;
+		this.userName = userName;
+		this.password = password;
+		this.allRouteCount = 0;
+		this.flashRouteCount = 0;
+		this.rotpunktRouteCount = 0;
+		this.notClimbedRouteCount = 0;
+		this.ratings = null;
+	}
 	
 	public String geteMail() {
 		return eMail;
@@ -16,10 +45,10 @@ public class User {
 		this.eMail = eMail;
 	}
 	public String getUserName() {
-		return UserName;
+		return userName;
 	}
 	public void setUserName(String userName) {
-		UserName = userName;
+		this.userName = userName;
 	}
 	public int getAllRouteCount() {
 		return allRouteCount;

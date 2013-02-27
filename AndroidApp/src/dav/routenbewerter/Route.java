@@ -1,4 +1,4 @@
-package com.dav.routenbewerter;
+package dav.routenbewerter;
 
 public class Route {
 
@@ -11,36 +11,26 @@ public class Route {
 	char averageRatingAdd;
 	int ratingCount;
 	String avarageCategorie;
-	int personalRating;
-	char personalRatingAdd;
-	String personalHowClimbed;
-	String personalCategorie;
+	Rating rating;
 	
+		
+	public Route(int routeNumber, String handleColor, String routeDriver,
+			String wallName, String creationDate, int averageRating,
+			char averageRatingAdd, int ratingCount, String avarageCategorie,
+			Rating rating) {
+		super();
+		this.routeNumber = routeNumber;
+		this.handleColor = handleColor;
+		this.routeDriver = routeDriver;
+		this.wallName = wallName;
+		this.creationDate = creationDate;
+		this.averageRating = averageRating;
+		this.averageRatingAdd = averageRatingAdd;
+		this.ratingCount = ratingCount;
+		this.avarageCategorie = avarageCategorie;
+		this.rating = rating;
+	}
 	
-	public int getPersonalRating() {
-		return personalRating;
-	}
-	public void setPersonalRating(int personalRating) {
-		this.personalRating = personalRating;
-	}
-	public char getPersonalRatingAdd() {
-		return personalRatingAdd;
-	}
-	public void setPersonalRatingAdd(char personalRatingAdd) {
-		this.personalRatingAdd = personalRatingAdd;
-	}
-	public String getPersonalHowClimbed() {
-		return personalHowClimbed;
-	}
-	public void setPersonalHowClimbed(String personalHowClimbed) {
-		this.personalHowClimbed = personalHowClimbed;
-	}
-	public String getPersonalCategorie() {
-		return personalCategorie;
-	}
-	public void setPersonalCategorie(String personalCategorie) {
-		this.personalCategorie = personalCategorie;
-	}
 	public int getRouteNumber() {
 		return routeNumber;
 	}

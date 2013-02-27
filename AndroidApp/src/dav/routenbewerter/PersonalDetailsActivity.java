@@ -1,15 +1,17 @@
-package com.dav.routenbewerter;
+package dav.routenbewerter;
+
+import com.dav.routenbewerter.R;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 
-public class RateRouteActivity extends Activity {
+public class PersonalDetailsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_rateroute);
+		setContentView(R.layout.activity_personaldetails);
 	}
 
 	@Override
