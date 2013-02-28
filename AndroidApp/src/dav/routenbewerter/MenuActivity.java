@@ -20,6 +20,9 @@ public class MenuActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
 		
+		DBConnector db = new DBConnector(this);
+		db.syncDatabase();
+		
 		routeList = (Button) this.findViewById(R.id.menuRoutesButton);
 		personalStats = (Button) this.findViewById(R.id.menuPersonalButton);
 	        

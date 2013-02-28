@@ -4,9 +4,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Context;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
+import com.db4o.*;
 
 public class DBConnector {
 	ObjectContainer db = null;

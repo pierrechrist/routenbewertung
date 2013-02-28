@@ -1,0 +1,9 @@
+##
+## Sql Abfrage um nötigen Daten für die App aus der Datenbank der Typo3 Homepage zu holen
+##
+
+SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor
+FROM tx_dihlroutes_routelist r
+LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid
+LEFT JOIN tx_dihlroutes_sektor s ON r.sektor = s.uid
+WHERE r.deleted = '0'

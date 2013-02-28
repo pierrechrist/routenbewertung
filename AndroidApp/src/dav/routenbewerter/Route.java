@@ -6,7 +6,7 @@ public class Route {
 	String handleColor;
 	String routeDriver;
 	String wallName;
-	String creationDate;
+	int creationDate;
 	int averageRating;
 	char averageRatingAdd;
 	int ratingCount;
@@ -15,7 +15,7 @@ public class Route {
 	
 		
 	public Route(int routeNumber, String handleColor, String routeDriver,
-			String wallName, String creationDate, int averageRating,
+			String wallName, int creationDate, int averageRating,
 			char averageRatingAdd, int ratingCount, String avarageCategorie,
 			Rating rating) {
 		super();
@@ -29,6 +29,16 @@ public class Route {
 		this.ratingCount = ratingCount;
 		this.avarageCategorie = avarageCategorie;
 		this.rating = rating;
+	}
+	
+	public Route(int routeNumber, String handleColor, String routeDriver,
+			String wallName, int creationDate) {
+		super();
+		this.routeNumber = routeNumber;
+		this.handleColor = handleColor;
+		this.routeDriver = routeDriver;
+		this.wallName = wallName;
+		this.creationDate = creationDate;
 	}
 	
 	public int getRouteNumber() {
@@ -55,10 +65,10 @@ public class Route {
 	public void setWallName(String wallName) {
 		this.wallName = wallName;
 	}
-	public String getCreationDate() {
+	public int getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(String creationDate) {
+	public void setCreationDate(int creationDate) {
 		this.creationDate = creationDate;
 	}
 	public double getAverageRating() {
