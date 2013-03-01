@@ -4,6 +4,7 @@ import java.util.List;
 
 public class User {
 
+	int userId;
 	String eMail;
 	String userName;
 	String password;
@@ -25,6 +26,7 @@ public class User {
 		this.rotpunktRouteCount = rotpunktRouteCount;
 		this.notClimbedRouteCount = notClimbedRouteCount;
 		this.ratings = ratings;
+		this.userId = 0;
 	}
 	public User(String eMail, String userName, String password) {
 		super();
@@ -36,8 +38,28 @@ public class User {
 		this.rotpunktRouteCount = 0;
 		this.notClimbedRouteCount = 0;
 		this.ratings = null;
+		this.userId = 0;
 	}
 	
+	
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
 	public String geteMail() {
 		return eMail;
 	}

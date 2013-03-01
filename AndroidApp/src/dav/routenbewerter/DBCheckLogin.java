@@ -16,32 +16,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class DBSync extends AsyncTask<ObjectContainer, Integer, Void> {
-
-	private ObjectContainer db;
+public class DBCheckLogin extends AsyncTask<String, Integer, Boolean> {
 	
 	@Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Log.i("DAV", "DB Sync starting");
+        Log.i("DAV", "LoginCheck starting");
     }
 	
 	@Override
-	protected Void doInBackground(ObjectContainer... params) {	
-		 db = params[0];
+	protected Boolean doInBackground(String... params) {	
 		 String result = "";
 		 InputStream is = null;
 		 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		 //Wertepaar für $_Request anlegen
-		 nameValuePairs.add(new BasicNameValuePair("sql","SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor FROM tx_dihlroutes_routelist r LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid LEFT JOIN tx_dihlroutes_sektor s ON r.sektor = s.uid WHERE r.deleted = '0'"));
+		 nameValuePairs.add(new BasicNameValuePair("sql","SELECT `user_name`, `user_password` FROM `rb_user` WHERE `user_name` = '"+params[0]+"' AND `user_password` = '"+params[1]+"'"));
 		 
-		 // http post
 		 try {
 			 HttpClient httpclient = new DefaultHttpClient();
 			 HttpPost httppost = new HttpPost("http://80.82.209.90/~web1/query.php");	//Adresse des PHP Scripts das auf die DB zugreift und JSON zurückliefert
@@ -65,40 +58,26 @@ public class DBSync extends AsyncTask<ObjectContainer, Integer, Void> {
 		} catch (Exception e) {
 		    Log.e("log_tag", "Error converting result " + e.toString());
 		}
-		
 		//JSON Daten parsen
+		Boolean returnResult = false;
 		try {
 		    JSONArray jArray = new JSONArray(result);
-			for(int i=0; i < jArray.length(); i++){
-				JSONObject json_data = jArray.getJSONObject(i);
-				
-				//db4o
-				Route r = new Route(json_data.getInt("uid"), null, null, null, 0);
-				ObjectSet<Route> dbresult = db.queryByExample(r);
-				if(!dbresult.isEmpty()){	//Wenn es den Eintrag schon in der DB gibt wird er nur geupdated
-					Route found = dbresult.next();
-					found.setCreationDate(json_data.getInt("dateon"));
-					found.setRouteDriver(json_data.getString("createdby"));
-					found.setHandleColor(json_data.getString("color"));
-					found.setRouteDriver(json_data.getString("createdby"));
-					db.store(found);
-				}
-				else {	//Ansonsten wird ein neuer Eintrag angelegt
-					r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), json_data.getString("sektor"), json_data.getInt("dateon"));
-					db.store(r);
-				}
-			}
+			JSONObject json_data = jArray.getJSONObject(0);
+			
+			if(params[0].equals(json_data.getString("user_name")) && params[1].equals(json_data.getString("user_password")))
+				returnResult = true;
+			else
+				returnResult = false;
+
 		} catch (JSONException e){
 			Log.e("log_tag", "Error parsing data "+e.toString());
-		}
-		
-		return null;
+		}      
+		return returnResult;
 	}
 
 	@Override
-    protected void onPostExecute(Void result) {
+    protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
-        Log.i("DAV", "DB Sync ending");   
-        db.close();
+        Log.i("DAV", "LoginCheck ending");   
     }
 }

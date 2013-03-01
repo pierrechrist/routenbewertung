@@ -20,8 +20,9 @@ public class MenuActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
 		
-		DBConnector db = new DBConnector(this);
-		db.syncDatabase();
+		//DBConnector db = new DBConnector(this);
+		//db.mysqlInsert("INSERT INTO `dav_rb`.`rb_user` (`uid`, `user_name`, `user_email`, `user_password`, `route_count`, `flash_count`, `redpoint_count`, `notclimbed_count`) VALUES (NULL, 'Pierre', 'pierrechrist@gmx.de', 'test', NULL, NULL, NULL, NULL)");
+		//db.syncDatabase();
 		
 		routeList = (Button) this.findViewById(R.id.menuRoutesButton);
 		personalStats = (Button) this.findViewById(R.id.menuPersonalButton);

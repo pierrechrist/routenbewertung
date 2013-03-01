@@ -1,10 +1,13 @@
 package dav.routenbewerter;
 
+import java.util.concurrent.ExecutionException;
+
 import com.dav.routenbewerter.R;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +30,20 @@ public class MainActivity extends Activity {
 	        {
 	          public void onClick(View v)
 	          {
+	        	 try {
+					Boolean test = new DBCheckLogin().execute("Pierre", "test").get();
+					Log.i("DAV", test.toString());
+					test = new DBCheckLogin().execute("Hans", "test").get();
+					Log.i("DAV", test.toString());
+					test = new DBCheckLogin().execute("Pierre", "nix").get();
+					Log.i("DAV", test.toString());
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	              Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
 
 	              startActivity(menuActivity);
