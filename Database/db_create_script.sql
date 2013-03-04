@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 28. Februar 2013 um 19:06
+-- Erstellungszeit: 04. März 2013 um 22:27
 -- Server Version: 5.1.49
 -- PHP-Version: 5.3.3-7+squeeze14
 
@@ -29,12 +29,12 @@ CREATE TABLE IF NOT EXISTS `rb_ratings` (
   `rating` int(10) unsigned DEFAULT NULL,
   `howclimbed` varchar(20) DEFAULT NULL,
   `categorie` varchar(20) DEFAULT NULL,
-  `crdate` timestamp NULL DEFAULT NULL,
+  `crdate` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `user_id` int(10) unsigned DEFAULT NULL,
   `route_id` int(10) unsigned DEFAULT NULL,
   `uid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -59,13 +59,15 @@ CREATE TABLE IF NOT EXISTS `rb_user` (
   `uid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_name` varchar(45) DEFAULT NULL,
   `user_email` varchar(45) DEFAULT NULL,
-  `user_password` varchar(45) DEFAULT NULL,
+  `encrypted_password` varchar(80) NOT NULL,
+  `salt` varchar(45) NOT NULL,
+  `crdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `route_count` int(10) unsigned zerofill DEFAULT NULL,
   `flash_count` int(10) unsigned zerofill DEFAULT NULL,
   `redpoint_count` int(10) unsigned zerofill DEFAULT NULL,
   `notclimbed_count` int(10) unsigned zerofill DEFAULT NULL,
   PRIMARY KEY (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 

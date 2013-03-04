@@ -12,32 +12,30 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class DBCheckLogin extends AsyncTask<String, Integer, Boolean> {
+public class JSONParser extends AsyncTask<BasicNameValuePair, Integer, String> {
 	
 	@Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Log.i("DAV", "LoginCheck starting");
+        Log.i("DAV", "AsyncTask starting");
     }
 	
 	@Override
-	protected Boolean doInBackground(String... params) {	
+	protected String doInBackground(BasicNameValuePair... params) {	
 		 String result = "";
-		 InputStream is = null;
+		 InputStream is = null; 
 		 ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		 //Wertepaar für $_Request anlegen
-		 nameValuePairs.add(new BasicNameValuePair("sql","SELECT `user_name`, `user_password` FROM `rb_user` WHERE `user_name` = '"+params[0]+"' AND `user_password` = '"+params[1]+"'"));
-		 
+		 for(int i=0; i < params.length; i++) {
+			 nameValuePairs.add(params[i]);
+		 }
+		 // http post
 		 try {
 			 HttpClient httpclient = new DefaultHttpClient();
-			 HttpPost httppost = new HttpPost("http://80.82.209.90/~web1/query.php");	//Adresse des PHP Scripts das auf die DB zugreift und JSON zurückliefert
+			 HttpPost httppost = new HttpPost("http://80.82.209.90/~web1/AndroidWebAPI/index.php");	//Adresse des PHP Scripts das auf die DB zugreift und JSON zurückliefert
 			 httppost.setEntity (new UrlEncodedFormEntity(nameValuePairs));
 			 HttpResponse response = httpclient.execute(httppost);
 			 HttpEntity entity = response.getEntity();
@@ -58,26 +56,13 @@ public class DBCheckLogin extends AsyncTask<String, Integer, Boolean> {
 		} catch (Exception e) {
 		    Log.e("log_tag", "Error converting result " + e.toString());
 		}
-		//JSON Daten parsen
-		Boolean returnResult = false;
-		try {
-		    JSONArray jArray = new JSONArray(result);
-			JSONObject json_data = jArray.getJSONObject(0);
-			
-			if(params[0].equals(json_data.getString("user_name")) && params[1].equals(json_data.getString("user_password")))
-				returnResult = true;
-			else
-				returnResult = false;
-
-		} catch (JSONException e){
-			Log.e("log_tag", "Error parsing data "+e.toString());
-		}      
-		return returnResult;
+		
+		return result;
 	}
 
 	@Override
-    protected void onPostExecute(Boolean result) {
-        super.onPostExecute(result);
-        Log.i("DAV", "LoginCheck ending");   
+    protected void onPostExecute(String result) {
+		Log.i("DAV", "AsyncTask ending");
+        super.onPostExecute(result);   
     }
 }

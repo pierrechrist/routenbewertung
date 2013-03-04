@@ -100,36 +100,27 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="dav.routenbewerter.DBInsert" project="DAV_Routenbewerter" 
-    file="/DAV_Routenbewerter/src/dav/routenbewerter/DBInsert.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="355" y="548"/>    
+  <class id="12" language="java" name="dav.routenbewerter.JSONParser" project="DAV_Routenbewerter" 
+    file="/DAV_Routenbewerter/src/dav/routenbewerter/JSONParser.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="360" y="597"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="13" language="java" name="dav.routenbewerter.DBCheckLogin" project="DAV_Routenbewerter" 
-    file="/DAV_Routenbewerter/src/dav/routenbewerter/DBCheckLogin.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="141" y="590"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
-      visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true"/>      
-      <operations public="true" package="true" protected="true" private="true"/>    
-    </display>  
-  </class>  
-  <association id="14">    
+  <association id="13">    
     <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="15" name="route"/>      
-      <multiplicity id="16" minimum="0" maximum="1"/>    
+      <attribute id="14" name="route"/>      
+      <multiplicity id="15" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="17">    
+  <association id="16">    
     <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="18" name="user"/>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
+      <attribute id="17" name="user"/>      
+      <multiplicity id="18" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  

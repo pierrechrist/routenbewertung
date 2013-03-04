@@ -14,6 +14,7 @@ public class MainActivity extends Activity {
 
     private Button login;
     private Button register;
+    private DBConnector db;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,25 +23,15 @@ public class MainActivity extends Activity {
 		
 		login = (Button) this.findViewById(R.id.loginButton);
 		register = (Button) this.findViewById(R.id.registerButton);
-	        
+		//db = new DBConnector(this);
+		//db.registerUser("pierre@web.de", "peter", "hallo");
+		
 		login.setOnClickListener(new OnClickListener()
 	        {
 	          public void onClick(View v)
 	          {
-	        	 /*try {
-					Boolean test = new DBCheckLogin().execute("Pierre", "test").get();
-					Log.i("DAV", test.toString());
-					test = new DBCheckLogin().execute("Hans", "test").get();
-					Log.i("DAV", test.toString());
-					test = new DBCheckLogin().execute("Pierre", "nix").get();
-					Log.i("DAV", test.toString());
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
+	        	  //db.checkUser("pierre", "test");
+	        	  //db.syncDatabase();
 	              Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
 
 	              startActivity(menuActivity);
