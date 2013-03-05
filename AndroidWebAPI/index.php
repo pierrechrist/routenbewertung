@@ -30,6 +30,7 @@ if (isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
         if ($user != false) {
             // Benutzer gefunden und Passwort richtig
             $response["success"] = 1;
+			$response["user"]["uid"] = $user["uid"];
             $response["user"]["name"] = $user["user_name"];
             $response["user"]["email"] = $user["user_email"];
             $response["user"]["created_at"] = $user["crdate"];

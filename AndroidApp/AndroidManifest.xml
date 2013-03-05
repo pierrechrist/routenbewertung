@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="dav.routenbewerter.MenuActivity" android:label="@string/menu_title"></activity>
+        <activity android:name="dav.routenbewerter.MenuActivity" android:label="@string/menu_title" android:configChanges="keyboardHidden|orientation"></activity>
         <activity android:name="dav.routenbewerter.RegisterActivity" android:label="@string/register_title"></activity>
         <activity android:name="dav.routenbewerter.PersonalDetailsActivity" android:label="@string/personal_title"></activity>
         <activity android:name="dav.routenbewerter.RateRouteActivity" android:label="@string/rateroute_title"></activity>

@@ -7,7 +7,6 @@ public class User {
 	int userId;
 	String eMail;
 	String userName;
-	String password;
 	int allRouteCount;
 	int flashRouteCount;
 	int rotpunktRouteCount;
@@ -28,17 +27,16 @@ public class User {
 		this.ratings = ratings;
 		this.userId = 0;
 	}
-	public User(String eMail, String userName, String password) {
+	public User(int userId, String eMail, String userName) {
 		super();
+		this.userId = userId;
 		this.eMail = eMail;
 		this.userName = userName;
-		this.password = password;
 		this.allRouteCount = 0;
 		this.flashRouteCount = 0;
 		this.rotpunktRouteCount = 0;
 		this.notClimbedRouteCount = 0;
 		this.ratings = null;
-		this.userId = 0;
 	}
 	
 	
@@ -47,12 +45,6 @@ public class User {
 	}
 	public void setUserId(int userId) {
 		this.userId = userId;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
 	}
 	public List<Rating> getRatings() {
 		return ratings;

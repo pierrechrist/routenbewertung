@@ -13,15 +13,27 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class JSONParser extends AsyncTask<BasicNameValuePair, Integer, String> {
 	
+	private ProgressDialog dialog;
+	
+	public JSONParser(Activity activity) {
+        dialog = new ProgressDialog(activity);
+    }
+	
 	@Override
     protected void onPreExecute() {
         super.onPreExecute();
         Log.i("DAV", "AsyncTask starting");
+        this.dialog.setMessage("Hole Daten aus dem Web");
+        if(!this.dialog.isShowing()){
+            this.dialog.show();
+        }
     }
 	
 	@Override
@@ -62,7 +74,10 @@ public class JSONParser extends AsyncTask<BasicNameValuePair, Integer, String> {
 
 	@Override
     protected void onPostExecute(String result) {
-		Log.i("DAV", "AsyncTask ending");
         super.onPostExecute(result);   
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        Log.i("DAV", "AsyncTask ending");
     }
 }

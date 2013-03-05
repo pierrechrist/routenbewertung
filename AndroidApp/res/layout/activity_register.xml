@@ -75,7 +75,9 @@
                 android:id="@+id/registerPasswordText1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10" android:inputType="textPassword"/>
+                android:ems="10"
+                tools:ignore="TextFields" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -94,7 +96,9 @@
                 android:id="@+id/registerPasswordText2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10" android:inputType="textPassword"/>
+                android:ems="10"
+                tools:ignore="TextFields" />
+
         </LinearLayout>
 
         <LinearLayout
