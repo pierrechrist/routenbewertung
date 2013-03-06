@@ -1,6 +1,7 @@
 package dav.routenbewerter;
 
 import com.dav.routenbewerter.R;
+import com.db4o.ObjectSet;
 
 import android.os.Bundle;
 import android.app.ListActivity;
@@ -12,19 +13,21 @@ import android.widget.ListView;
 
 public class RoutesListActivity extends ListActivity {
 
+	private DBConnector db;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_routelist);
 		
-		String[] values = new String[] { "Mount Everest", "Qogir", "Kanchenjunga",
-		  "Lhotse", "Makalu I", "Cho Oyu", "Dhaulagiri", "Manaslu I",
-		  "Nanga Parbat", "Annapurna I" };
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
-
-		setListAdapter(adapter); 
+		ObjectSet<Route> result = null;
+		db = new DBConnector(this);
+		db.openDB();
+		result = db.getRoutes();
+		
+		ListView list = getListView();
+		ArrayAdapter<Route> adapter = new RouteAdapter(this, R.layout.route_list, result);
+	    list.setAdapter(adapter);
 	}
 
 	@Override
@@ -39,7 +42,23 @@ public class RoutesListActivity extends ListActivity {
     	super.onListItemClick(l, v, position, id);
         Intent routeDetailsActivity = new Intent(getApplicationContext(), RouteDetailsActivity.class);
         startActivity(routeDetailsActivity);
-
     }
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		db.closeDB();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		db.closeDB();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
 
 }

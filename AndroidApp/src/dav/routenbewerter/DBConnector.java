@@ -63,18 +63,18 @@ public class DBConnector {
 						JSONObject json_data = jArray.getJSONObject(i);
 
 						//db4o
-						Route r = new Route(json_data.getInt("uid"), null, null, null, 0);
+						Route r = new Route(json_data.getInt("uid"), null, null, null, null, 0);
 						ObjectSet<Route> dbresult = db.queryByExample(r);
 						if(!dbresult.isEmpty()){	//Wenn es den Eintrag schon in der DB gibt wird er nur geupdated
-							Route found = dbresult.next();
-							found.setCreationDate(json_data.getInt("dateon"));
-							found.setRouteDriver(json_data.getString("createdby"));
-							found.setHandleColor(json_data.getString("color"));
-							found.setRouteDriver(json_data.getString("createdby"));
-							db.store(found);
+							//Route found = dbresult.next();
+							//found.setCreationDate(json_data.getInt("dateon"));
+							//found.setRouteDriver(json_data.getString("createdby"));
+							//found.setHandleColor(json_data.getString("color"));
+							//found.setWallName(json_data.getString("sektor"));
+							//db.store(found);
 						}
 						else {	//Ansonsten wird ein neuer Eintrag angelegt
-							r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), json_data.getString("sektor"), json_data.getInt("dateon"));
+							r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), json_data.getString("sektor"), json_data.getString("uiaa"), json_data.getInt("dateon"));
 							db.store(r);
 						}
 					}
@@ -89,8 +89,13 @@ public class DBConnector {
 		}.start();
 	}
 	
-	public ObjectSet<Route> getRoutes(Route r) {	//Holt alle Routen aus der lokalen DB
+	public ObjectSet<Route> getRoutes(Route r) {	//Holt alle Routen die dem suchparameter entsprechen
 		ObjectSet<Route> result = db.queryByExample(r);
+		return result;
+	}
+	
+	public ObjectSet<Route> getRoutes() {	//Holt alle Routen aus der lokalen DB
+		ObjectSet<Route> result = db.queryByExample(Route.class);
 		return result;
 	}
 	
