@@ -36,5 +36,7 @@
     <string name="rateroute_rating">Bewertung:</string>
     <string name="rateroute_climbed">wie geklettert:</string>
     <string name="rateroute_categorie">Kategorie:</string>
+    <string name="loginCheckBox">Logindaten speichern</string>
+    <string name="loginOfflineMode">Offline Modus</string>
 
 </resources>

@@ -33,12 +33,17 @@ public class MenuActivity extends Activity {
 		
 		db = new DBConnector(this);
 		db.openDB();
-		db.syncDatabase();
-		User u = new User(userId, null, null);
-		User uResult = db.getUser(u);
-		Log.i("DAV", "UserName: " + u.getUserName());
-		Toast.makeText(getApplicationContext(), "UserId: "+uResult.getUserId()+" UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
-	        
+		
+		if(userId != 0){
+			db.syncDatabase();
+			User u = new User(userId, null, null);
+			User uResult = db.getUser(u);
+			Log.i("DAV", "UserName: " + u.getUserName());
+			Toast.makeText(getApplicationContext(), "UserId: "+uResult.getUserId()+" UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
+		} else {
+			Toast.makeText(getApplicationContext(), "Offline Modus", Toast.LENGTH_LONG).show();
+		}  
+		
 		routeList.setOnClickListener(new OnClickListener()
 	        {
 	          public void onClick(View v)

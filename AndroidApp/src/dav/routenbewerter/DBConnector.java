@@ -136,8 +136,8 @@ public class DBConnector {
 		return rating;
 	}
 	
-	public Boolean registerUser(String eMail, String userName, String password) {
-		Boolean success = false;
+	public int registerUser(String eMail, String userName, String password) {
+		int userId = 0;
 		
 		//User in die entfernte DB schreiben
 		BasicNameValuePair tag = new BasicNameValuePair("tag","register");
@@ -168,18 +168,16 @@ public class DBConnector {
 				Log.i("DAV", "setRouteRating_email: " + jsonUser.getString("email"));
 			}
 			if(jObj.getString("success").equals("1")) {
-				success = true;
+				Toast.makeText(activitiy, "Erfolgreich Registriert", Toast.LENGTH_LONG).show();
 			} else {
 				Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
-				success = false;
 			}
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
 		
-		checkUser(userName, password);
-		return success;
-		
+		userId = checkUser(userName, password);
+		return userId;	
 	}
 	
 	public int checkUser(String name, String password) {

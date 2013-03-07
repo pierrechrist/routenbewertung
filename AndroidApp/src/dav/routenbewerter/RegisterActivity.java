@@ -42,9 +42,10 @@ public class RegisterActivity extends Activity {
 	          public void onClick(View v)
 	          {
 	        	  if(password1.getText().toString().equals(password2.getText().toString())) {
-	        		  Boolean check = db.registerUser(email.getText().toString(), username.getText().toString(), password1.getText().toString());
-	        		  if(check) {
+	        		  int userId = db.registerUser(email.getText().toString(), username.getText().toString(), password1.getText().toString());
+	        		  if(userId != 0) {
 	        			  Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
+	        			  menuActivity.putExtra("userId", userId);
 	        			  startActivity(menuActivity);
 	        		  }
 	        	  } else {

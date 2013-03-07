@@ -5,10 +5,12 @@ import com.dav.routenbewerter.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,8 +18,10 @@ public class MainActivity extends Activity {
 
     private Button login;
     private Button register;
+    private Button offline;
     private EditText username;
     private EditText password;
+    private CheckBox checkBox;
     private DBConnector db;
     private int userId;
 	
@@ -28,8 +32,15 @@ public class MainActivity extends Activity {
 		
 		login = (Button) this.findViewById(R.id.loginButton);
 		register = (Button) this.findViewById(R.id.registerButton);
+		offline = (Button) this.findViewById(R.id.offlineButton);
+		checkBox = (CheckBox) this.findViewById(R.id.loginCheckBox);
 		username = (EditText) this.findViewById(R.id.emailText);
 		password = (EditText) this.findViewById(R.id.passwordText);
+		
+		SharedPreferences sp = this.getSharedPreferences("Login", MODE_PRIVATE);
+		username.setText(sp.getString("Unm", null));
+		password.setText(sp.getString("Psw", null));
+		checkBox.setChecked(sp.getBoolean("Chk", false));
 		
 		db = new DBConnector(this);
 		
@@ -44,6 +55,19 @@ public class MainActivity extends Activity {
 		        	  if(userId != 0) {
 			              Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
 			              menuActivity.putExtra("userId", userId);
+			              
+			              SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+			              SharedPreferences.Editor ed = sp.edit();
+			              if(checkBox.isChecked()) {
+			            	  ed.putString("Unm",username.getText().toString());              
+			            	  ed.putString("Psw",password.getText().toString()); 
+			            	  ed.putBoolean("Chk", true);
+			              } else {
+			            	  ed.putString("Unm",null);              
+				              ed.putString("Psw",null);
+				              ed.putBoolean("Chk", false);
+			              }
+			              ed.commit();		           		              
 			              startActivity(menuActivity);
 		        	  } 
 	        	  }
@@ -60,6 +84,16 @@ public class MainActivity extends Activity {
 	              startActivity(registerActivity);
 	          }
 	        });
+		
+		offline.setOnClickListener(new OnClickListener()
+        {
+          public void onClick(View v)
+          {
+              Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
+              menuActivity.putExtra("userId", 0);
+              startActivity(menuActivity);
+          }
+        });
 	}
 
 	@Override
