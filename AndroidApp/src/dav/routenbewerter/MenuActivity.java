@@ -49,7 +49,7 @@ public class MenuActivity extends Activity {
 	          public void onClick(View v)
 	          {
 	              Intent routesListActivity = new Intent(getApplicationContext(), RoutesListActivity.class);
-
+	              routesListActivity.putExtra("userId", userId);
 	              startActivity(routesListActivity);
 	          }
 	        });
@@ -60,7 +60,7 @@ public class MenuActivity extends Activity {
 	          public void onClick(View v)
 	          {
 	              Intent personalDetailsActivity = new Intent(getApplicationContext(), PersonalDetailsActivity.class);
-	              
+	              personalDetailsActivity.putExtra("userId", userId);
 	              startActivity(personalDetailsActivity);
 	          }
 	        });

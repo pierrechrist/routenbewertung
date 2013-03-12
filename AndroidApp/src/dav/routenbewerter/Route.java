@@ -7,36 +7,48 @@ public class Route {
 	String routeDriver;
 	String wallName;
 	int creationDate;
+	int topRobe;
 	String averageRating;
-	int ratingCount;
 	String avarageCategorie;
-	Rating rating;
+	Rating personalRating;
+	int ratingCount;
+	int flashCount;
+	int redpointCount;
+	int notClimbedCount;
 	
 		
-	public Route(int routeNumber, String handleColor, String routeDriver,
-			String wallName, int creationDate, String averageRating, int ratingCount, String avarageCategorie,
-			Rating rating) {
+	public Route(int routeNumber) {
 		super();
 		this.routeNumber = routeNumber;
-		this.handleColor = handleColor;
-		this.routeDriver = routeDriver;
-		this.wallName = wallName;
-		this.creationDate = creationDate;
-		this.averageRating = averageRating;
-		this.ratingCount = ratingCount;
-		this.avarageCategorie = avarageCategorie;
-		this.rating = rating;
+		this.handleColor = null;
+		this.routeDriver = null;
+		this.wallName = null;
+		this.creationDate = 0;
+		this.topRobe = 0;
+		this.averageRating = null;
+		this.ratingCount = 0;
+		this.avarageCategorie = null;
+		this.personalRating = null;
+		this.flashCount = 0;
+		this.redpointCount = 0;
 	}
 	
 	public Route(int routeNumber, String handleColor, String routeDriver,
-			String wallName, String averageRating, int creationDate) {
+			String wallName, int creationDate, int topRobe, String averageRating, int ratingCount, String avarageCategorie, int flashCount, int redpointCount, int notClimbed) {
 		super();
 		this.routeNumber = routeNumber;
 		this.handleColor = handleColor;
 		this.routeDriver = routeDriver;
 		this.wallName = wallName;
-		this.averageRating = averageRating;
 		this.creationDate = creationDate;
+		this.topRobe = topRobe;
+		this.averageRating = averageRating;
+		this.ratingCount = ratingCount;
+		this.avarageCategorie = avarageCategorie;
+		this.personalRating = null;
+		this.flashCount = flashCount;
+		this.redpointCount = redpointCount;
+		this.notClimbedCount = notClimbed;
 	}
 	
 	public int getRouteNumber() {
@@ -86,6 +98,47 @@ public class Route {
 	}
 	public void setAvarageCategorie(String avarageCategorie) {
 		this.avarageCategorie = avarageCategorie;
+	}
+
+	public int getTopRobe() {
+		return topRobe;
+	}
+
+	public void setTopRobe(int topRobe) {
+		this.topRobe = topRobe;
+	}
+
+	public Rating getPersonalRating() {
+		return personalRating;
+	}
+
+	public void setPersonalRating(Rating personalRating) {
+		this.personalRating = personalRating;
+	}
+
+	public int getFlashCount() {
+		return flashCount;
+	}
+
+	public void setFlashCount(int flashCount) {
+		this.flashCount = flashCount;
+	}
+
+	public int getRedpointCount() {
+		return redpointCount;
+	}
+
+	public void setRedpointCount(int redpointCount) {
+		this.redpointCount = redpointCount;
+	}
+
+	public int getNotClimbedCount() {
+		return notClimbedCount;
+	}
+
+	public void setNotClimbedCount(int notClimbedCount) {
+		this.notClimbedCount = notClimbedCount;
 	}	
+	
 	
 }

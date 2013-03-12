@@ -4,14 +4,47 @@ import com.dav.routenbewerter.R;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
+import android.widget.TextView;
 
 public class PersonalDetailsActivity extends Activity {
+	
+	private int userId;
+	private DBConnector db;
+	private TextView userName;
+	private TextView routeCount;
+	private TextView flashCount;
+	private TextView redPointCount;
+	private TextView notClimbedCount;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personaldetails);
+		
+		userName = (TextView)this.findViewById(R.id.personalUsername);
+		routeCount = (TextView)this.findViewById(R.id.personalRoutecount);
+		flashCount = (TextView)this.findViewById(R.id.personalFlashcount);
+		redPointCount = (TextView)this.findViewById(R.id.personalRotpunktcount);
+		notClimbedCount = (TextView)this.findViewById(R.id.personalNotclimbedcount);
+		
+		Intent i = getIntent();
+		userId = i.getIntExtra("userId", 0);
+		
+		db = new DBConnector(this);
+		db.openDB();
+		
+		User u = new User(userId, null, null);
+		u = db.getUser(u);
+		
+		userName.setText(u.getUserName());
+		routeCount.setText(Integer.toString(u.getAllRouteCount()));
+		flashCount.setText(Integer.toString(u.getFlashRouteCount()));
+		redPointCount.setText(Integer.toString(u.getRotpunktRouteCount()));
+		notClimbedCount.setText(Integer.toString(u.getNotClimbedRouteCount()));
+		
 	}
 
 	@Override
@@ -21,4 +54,17 @@ public class PersonalDetailsActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		db.closeDB();
+		Log.i("DAV", "DB Geschlossen. Activity Destroyed");
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		db.closeDB();
+	}
+	
 }

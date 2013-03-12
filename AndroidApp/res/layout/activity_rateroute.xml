@@ -32,13 +32,7 @@
 
             <Spinner
                 android:id="@+id/raterouteRating1"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1" />
-
-            <Spinner
-                android:id="@+id/raterouteRating2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1" />
 

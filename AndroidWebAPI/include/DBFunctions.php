@@ -36,7 +36,16 @@ class DBFunctions {
      * Routen auslesen
      */
     public function getRoutes() {
-		$result = mysql_query("SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor FROM tx_dihlroutes_routelist r LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid LEFT JOIN tx_dihlroutes_sektor s ON r.sektor = s.uid WHERE r.deleted = '0'");
+		$result = mysql_query("SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor, r.tr,
+			(SELECT COUNT(*) FROM rb_ratings WHERE route_id = r.uid) as rating_count,
+			(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Flash' AND route_id = r.uid) as flash_count,
+			(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Rotpunkt' AND route_id = r.uid) as redpoint_count,
+			(SELECT COUNT(*)-rating_count FROM rb_user) as not_climbed_count,
+			(SELECT u.uiaa FROM rb_route_details LEFT JOIN tx_dihlroutes_uiaa u ON avarage_rating = u.uid  WHERE route_id = r.uid) as avarage_rating,
+			(SELECT avarage_categorie FROM rb_route_details WHERE route_id = r.uid) as avarage_categorie
+			FROM tx_dihlroutes_routelist r 
+			LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid 
+			LEFT JOIN tx_dihlroutes_sektor s ON r.sektor = s.uid WHERE r.deleted = '0'");
         $no_of_rows = mysql_num_rows($result);
         if ($no_of_rows > 0) {
 			// Routen zurückgeben
@@ -46,7 +55,22 @@ class DBFunctions {
             return false;
         }
     }
-
+	
+	/**
+     * UiaaId auslesen
+     */
+    public function getUiaa($rating) {
+		$result = mysql_query("SELECT uid FROM tx_dihlroutes_uiaa WHERE uiaa = '$rating'");
+        $no_of_rows = mysql_num_rows($result);
+        if ($no_of_rows > 0) {
+			// Uiaa zurückgeben
+			$result = mysql_fetch_array($result);
+            return $result;
+        } else {
+            // Keine Routen gefunden
+            return false;
+        }
+    }
  
 }
  

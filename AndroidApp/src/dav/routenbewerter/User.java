@@ -27,6 +27,7 @@ public class User {
 		this.ratings = ratings;
 		this.userId = 0;
 	}
+	
 	public User(int userId, String eMail, String userName) {
 		super();
 		this.userId = userId;
@@ -39,6 +40,17 @@ public class User {
 		this.ratings = null;
 	}
 	
+	public User(int userId) {
+		super();
+		this.userId = userId;
+		this.eMail = null;
+		this.userName = null;
+		this.allRouteCount = 0;
+		this.flashRouteCount = 0;
+		this.rotpunktRouteCount = 0;
+		this.notClimbedRouteCount = 0;
+		this.ratings = null;
+	}
 	
 	public int getUserId() {
 		return userId;

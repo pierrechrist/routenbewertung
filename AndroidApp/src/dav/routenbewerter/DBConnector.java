@@ -1,4 +1,6 @@
 package dav.routenbewerter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -7,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -63,18 +66,28 @@ public class DBConnector {
 						JSONObject json_data = jArray.getJSONObject(i);
 
 						//db4o
-						Route r = new Route(json_data.getInt("uid"), null, null, null, null, 0);
+						Route r = new Route(json_data.getInt("uid"));
 						ObjectSet<Route> dbresult = db.queryByExample(r);
+						
+						String avarageRating = null;
+						if(json_data.getString("avarage_rating").equals("null"))
+							avarageRating = json_data.getString("uiaa");
+						else
+							avarageRating = json_data.getString("avarage_rating");
+						
 						if(!dbresult.isEmpty()){	//Wenn es den Eintrag schon in der DB gibt wird er nur geupdated
-							//Route found = dbresult.next();
-							//found.setCreationDate(json_data.getInt("dateon"));
-							//found.setRouteDriver(json_data.getString("createdby"));
-							//found.setHandleColor(json_data.getString("color"));
-							//found.setWallName(json_data.getString("sektor"));
-							//db.store(found);
+							Route found = dbresult.next();
+							found.setAverageRating(avarageRating);
+							found.setAvarageCategorie(json_data.getString("avarage_categorie"));
+							found.setFlashCount(json_data.getInt("flash_count"));
+							found.setRedpointCount(json_data.getInt("redpoint_count"));
+							found.setNotClimbedCount(json_data.getInt("not_climbed_count"));
+							db.store(found);
 						}
 						else {	//Ansonsten wird ein neuer Eintrag angelegt
-							r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), json_data.getString("sektor"), json_data.getString("uiaa"), json_data.getInt("dateon"));
+							r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), 
+									json_data.getString("sektor"), json_data.getInt("dateon"), json_data.getInt("tr"), avarageRating, json_data.getInt("rating_count"),
+									json_data.getString("avarage_categorie"), json_data.getInt("flash_count"), json_data.getInt("redpoint_count"), json_data.getInt("not_climbed_count"));
 							db.store(r);
 						}
 					}
@@ -233,19 +246,17 @@ public class DBConnector {
 		return userId;
 	}
 	
-	public Boolean setRouteRating(String rating, String howClimbed, String categorie,
-			Date date, User user, Route route) {
+	@SuppressLint("SimpleDateFormat")
+	public Boolean setRouteRating(String rating, String howClimbed, String categorie, int userId, int routeId) {
 		Boolean success = false;
-		Rating r = new Rating(rating, howClimbed, categorie, date, user, route, false);	//Rating zum Speichern in die Datenbank anlegen
-		db.store(r);	//Rating in der lokalen DB speichern
 		
 		//Rating in die entfernte DB schreiben
-		BasicNameValuePair tag = new BasicNameValuePair("tag","setRating");
-		BasicNameValuePair pairRouteId = new BasicNameValuePair("routeid",route.getRouteNumber()+"");
-		BasicNameValuePair pairUserId = new BasicNameValuePair("userid",user.getUserId()+"");
+		BasicNameValuePair tag = new BasicNameValuePair("tag","setrating");
+		BasicNameValuePair pairRouteId = new BasicNameValuePair("routeid",routeId+"");
+		BasicNameValuePair pairUserId = new BasicNameValuePair("userid",userId+"");
 		BasicNameValuePair pairCategorie = new BasicNameValuePair("categorie",categorie);
 		BasicNameValuePair pairHowClimbed = new BasicNameValuePair("howclimbed",howClimbed);
-		BasicNameValuePair pairRating = new BasicNameValuePair("rating",rating);
+		BasicNameValuePair pairRating = new BasicNameValuePair("rating",getUiaa(rating)+"");
 		
 		String result = "";
 		try {
@@ -267,6 +278,17 @@ public class DBConnector {
 			Log.i("DAV", "setRouteRating_error: " + jObj.getString("error"));
 			if(jObj.getString("success").equals("1")) {
 				success = true;
+				SimpleDateFormat sdfToDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		        Date date = null;
+		        JSONObject jsonRating = jObj.getJSONObject("rating");
+				try {									   
+					date = sdfToDate.parse(jsonRating.getString("created_at"));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Rating r = new Rating(rating, howClimbed, categorie, date, this.getUser(new User(userId)), this.getRoute(new Route(routeId)), false);	//Rating zum Speichern in die Datenbank anlegen
+				db.store(r);	//Rating in der lokalen DB speichern
 			} else {
 				Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
 				success = false;
@@ -276,5 +298,41 @@ public class DBConnector {
         }
 		
 		return success;
+	}
+	
+	public int getUiaa(String rating) {
+		BasicNameValuePair tag = new BasicNameValuePair("tag","getuiaa");
+		BasicNameValuePair pairRating = new BasicNameValuePair("rating",rating);
+		int uiaa = 0;
+
+		String result = "";
+		try {
+			Log.i("DAV", "next up AsyncTask");
+			AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, pairRating);
+			result = (String)parser.get();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ExecutionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// try parse the string to a JSON object
+		JSONObject jObj = null;
+		try {
+        	jObj = new JSONObject(result);
+        	Log.i("DAV", "getUiaa_success: " + jObj.getString("success"));
+			Log.i("DAV", "getUiaa_error: " + jObj.getString("error"));
+			if(jObj.getString("success").equals("1")) {
+				uiaa = jObj.getInt("uiaa");
+			} else {
+				Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
+				uiaa = 166;
+			}
+        } catch (JSONException e) {
+            Log.e("JSON Parser", "Error parsing data " + e.toString());
+        }
+		
+		return uiaa;
 	}
 }

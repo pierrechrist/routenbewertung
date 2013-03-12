@@ -2,8 +2,36 @@
 ## Sql Abfrage um nötigen Daten für die App aus der Datenbank der Typo3 Homepage zu holen
 ##
 
-SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor
+// Alle Routen mit nötigen Infos
+SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor, r.tr
 FROM tx_dihlroutes_routelist r
 LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid
 LEFT JOIN tx_dihlroutes_sektor s ON r.sektor = s.uid
 WHERE r.deleted = '0'
+
+// Alle Routen mit nötigen Infos und zusätzlichem Rating Count
+SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor, r.tr,
+(SELECT COUNT(*) FROM rb_ratings WHERE route_id = r.uid) as rating_count,
+(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Flash' AND route_id = r.uid) as flash_count,
+(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Rotpunkt' AND route_id = r.uid) as redpoint_count
+FROM tx_dihlroutes_routelist r 
+LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid 
+LEFT JOIN tx_dihlroutes_sektor s ON r.sektor = s.uid WHERE r.deleted = '0'
+
+// Alle Routen mit nötigen Infos und Rating Count + Route Details
+SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor, r.tr,
+(SELECT COUNT(*) FROM rb_ratings WHERE route_id = r.uid) as rating_count,
+(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Flash' AND route_id = r.uid) as flash_count,
+(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Rotpunkt' AND route_id = r.uid) as redpoint_count,
+(SELECT COUNT(*)-rating_count FROM rb_user) as not_climbed_count,
+(SELECT u.uiaa FROM rb_route_details LEFT JOIN tx_dihlroutes_uiaa u ON avarage_rating = u.uid  WHERE route_id = r.uid) as avarage_rating,
+(SELECT avarage_categorie FROM rb_route_details WHERE route_id = r.uid) as avarage_categorie
+FROM tx_dihlroutes_routelist r 
+LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid 
+LEFT JOIN tx_dihlroutes_sektor s ON r.sektor = s.uid WHERE r.deleted = '0'
+
+//Rating Count mit Routen Id
+SELECT route_id, COUNT(*) as rating_count, 
+(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Flash') as flash_count,
+(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Rotpunkt') as redpoint_count
+FROM rb_ratings

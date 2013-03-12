@@ -110,6 +110,22 @@ if (isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
 			$response["error_msg"] = "Keine Routen gefunden";
 			echo json_encode($response);
 		}
+	} else if ($tag == 'getuiaa') {
+		$rating = $_REQUEST['rating'];
+		// Routen aus der Datenbank laden
+		$uiaa = $dbF->getUiaa($rating);
+		if ($uiaa != false) {
+			// Routen erfolgreich geladen
+			$response["success"] = 1;
+			// Uiaa in den JSON Response schreiben
+			$response["uiaa"]=$uiaa["uid"];				
+			echo json_encode($response);
+		} else {
+			// Keine Uiaa gefunden
+			$response["error"] = 1;
+			$response["error_msg"] = "Keine Uiaa gefunden";
+			echo json_encode($response);
+		}
 	} else {
         echo "Falsche Anfrage";
     }
