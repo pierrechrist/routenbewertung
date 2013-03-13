@@ -32,6 +32,9 @@
     <string name="routedetails_creationdate">Erstelldatum:</string>
     <string name="routedetails_avaragerating">Schwierigkeitsgrad:</string>
     <string name="routedetails_avaragecategorie">Kategorie:</string>
+    <string name="routedetails_ownRating">Eigene Bewertung:</string>
+    <string name="routedetails_ownCategorie">Eigene Categorie:</string>
+    <string name="routedetails_ownHowClimbed">wie geklettert:</string>
     <string name="rateroute_button">Route bewerten</string>
     <string name="rateroute_rating">Bewertung:</string>
     <string name="rateroute_climbed">wie geklettert:</string>

@@ -39,7 +39,7 @@ public class RoutesListActivity extends ListActivity {
     	super.onListItemClick(l, v, position, id);
         Intent routeDetailsActivity = new Intent(getApplicationContext(), RouteDetailsActivity.class);
         Log.i("DAV", "RouteId: " + result.get(position).routeNumber);
-        routeDetailsActivity.putExtra("RouteId", result.get(position).routeNumber);
+        routeDetailsActivity.putExtra("routeId", result.get(position).routeNumber);
         routeDetailsActivity.putExtra("userId", userId);
         startActivity(routeDetailsActivity);
     }

@@ -32,8 +32,13 @@ public class RouteDetailsActivity extends Activity {
 	private TextView flash;
 	private TextView redPoint;
 	private TextView notClimbed;
-
-	@SuppressLint("SimpleDateFormat")
+	private TextView ownRating;
+	private TextView ownHowClimbed;
+	private TextView ownCategorie;
+	private TextView ownRatingLable;
+	private TextView ownHowClimbedLable;
+	private TextView ownCategorieLable;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,30 +55,17 @@ public class RouteDetailsActivity extends Activity {
 		flash = (TextView)this.findViewById(R.id.routedetailsFlashcount);
 		redPoint = (TextView)this.findViewById(R.id.routedetailsRotpunktcount);
 		notClimbed = (TextView)this.findViewById(R.id.routedetailsNotclimbedcount);
+		ownRating = (TextView)this.findViewById(R.id.routedetailsOwnRating);
+		ownHowClimbed = (TextView)this.findViewById(R.id.routedetailsOwnHowClimbed);
+		ownCategorie = (TextView)this.findViewById(R.id.routedetailsOwnCategorie);
+		ownRatingLable = (TextView)this.findViewById(R.id.routedetailsOwnRatingLable);
+		ownHowClimbedLable = (TextView)this.findViewById(R.id.routedetailsOwnHowClimbedLable);
+		ownCategorieLable = (TextView)this.findViewById(R.id.routedetailsOwnCategorieLable);
 		
 		Intent i = getIntent();
-		routeId = i.getIntExtra("RouteId", 0);
+		routeId = i.getIntExtra("routeId", 0);
 		userId = i.getIntExtra("userId", 0);
 		
-		db = new DBConnector(this);
-		db.openDB();
-		
-		Route r = new Route(routeId);
-		r = db.getRoute(r);
-		
-		String date = new SimpleDateFormat("dd.MM.yyyy").format(new Date(r.getCreationDate() * 1000L));		
-		
-		routeNumber.setText(Integer.toString(r.getRouteNumber()));
-		wallName.setText(r.getWallName());
-		routeDriver.setText(r.getRouteDriver());
-		creationDate.setText(date);
-		handleColor.setText(r.getHandleColor());
-		rating.setText(r.getAverageRating());
-		categorie.setText(r.getAvarageCategorie());
-		flash.setText(Integer.toString(r.getFlashCount()));
-		redPoint.setText(Integer.toString(r.getRedpointCount()));
-		notClimbed.setText(Integer.toString(r.getNotClimbedCount()));
-	        
 		rate.setOnClickListener(new OnClickListener()
 	        {
 	          public void onClick(View v)
@@ -107,9 +99,47 @@ public class RouteDetailsActivity extends Activity {
 		db.closeDB();
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	protected void onResume() {
 		super.onResume();
+		db = new DBConnector(this);
+		db.openDB();
+		
+		Route r = new Route(routeId);
+		r = db.getRoute(r);
+		
+		String date = new SimpleDateFormat("dd.MM.yyyy").format(new Date(r.getCreationDate() * 1000L));		
+		
+		routeNumber.setText(Integer.toString(r.getRouteNumber()));
+		wallName.setText(r.getWallName());
+		routeDriver.setText(r.getRouteDriver());
+		creationDate.setText(date);
+		handleColor.setText(r.getHandleColor());
+		rating.setText(r.getAverageRating());
+		categorie.setText(r.getAvarageCategorie());
+		flash.setText(Integer.toString(r.getFlashCount()));
+		redPoint.setText(Integer.toString(r.getRedpointCount()));
+		notClimbed.setText(Integer.toString(r.getNotClimbedCount()));
+	        
+		Rating a = new Rating(r, new User(userId));
+		a = db.getRating(a);
+		if(a != null) {
+			Log.i("DAV", "Rating: "+ a.getRating());
+			Log.i("DAV", "not null");
+			rate.setVisibility(View.GONE);
+			ownRatingLable.setVisibility(View.VISIBLE);
+			ownHowClimbedLable.setVisibility(View.VISIBLE);
+			ownCategorieLable.setVisibility(View.VISIBLE);
+			ownRating.setVisibility(View.VISIBLE);
+			ownHowClimbed.setVisibility(View.VISIBLE);
+			ownCategorie.setVisibility(View.VISIBLE);
+			ownRating.setText(a.getRating());
+			ownHowClimbed.setText(a.getHowClimbed());
+			ownCategorie.setText(a.getCategorie());
+			
+		} else
+			Log.i("DAV", "null");
 	}
 
 }

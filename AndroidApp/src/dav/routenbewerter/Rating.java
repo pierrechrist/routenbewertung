@@ -24,6 +24,17 @@ public class Rating {
 		this.sent = sent;
 	}
 	
+	public Rating(Route route, User user) {
+		super();
+		this.rating = null;
+		this.howClimbed = null;
+		this.categorie = null;
+		this.date = null;
+		this.user = user;
+		this.route = route;
+		this.sent = true;
+	}
+	
 	public boolean isSent() {
 		return sent;
 	}

@@ -39,11 +39,18 @@ public class PersonalDetailsActivity extends Activity {
 		User u = new User(userId, null, null);
 		u = db.getUser(u);
 		
+		Rating a = new Rating(null, u);
+		a.setHowClimbed("Flash");
+		int flashC = db.getRatings(a).size();
+		a.setHowClimbed("Rotpunkt");
+		int redpointC = db.getRatings(a).size();
+		int routeC = db.getRoutes().size();
+		
 		userName.setText(u.getUserName());
-		routeCount.setText(Integer.toString(u.getAllRouteCount()));
-		flashCount.setText(Integer.toString(u.getFlashRouteCount()));
-		redPointCount.setText(Integer.toString(u.getRotpunktRouteCount()));
-		notClimbedCount.setText(Integer.toString(u.getNotClimbedRouteCount()));
+		routeCount.setText(Integer.toString(routeC));
+		flashCount.setText(Integer.toString(flashC));
+		redPointCount.setText(Integer.toString(redpointC));
+		notClimbedCount.setText(Integer.toString(routeC-(flashC+redpointC)));
 		
 	}
 

@@ -94,6 +94,24 @@ if (isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
                 $response["error_msg"] = "Fehler beim speichern des Ratings";
                 echo json_encode($response);
         }
+	} else if ($tag == 'getratings') {
+		$userId = $_REQUEST['userid'];
+	
+		// Ratings aus der Datenbank laden
+		$ratings = $dbF->getRatings($userId);
+		if ($ratings) {
+			// Ratings erfolgreich geladen
+			$response["success"] = 1;
+			// Jedes Rating in den JSON Response schreiben
+			while($rating=mysql_fetch_assoc($ratings))
+				$response["rating"][]=$rating;				
+			echo json_encode($response);
+		} else {
+			// Keine Ratings gefunden
+			$response["error"] = 1;
+			$response["error_msg"] = "Keine Ratings gefunden";
+			echo json_encode($response);
+		}
 	} else if ($tag == 'getroutes') {
 		// Routen aus der Datenbank laden
 		$routes = $dbF->getRoutes();

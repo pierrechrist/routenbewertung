@@ -33,6 +33,21 @@ class DBFunctions {
     }
 	
 	/**
+     * Ratings auslesen
+     */
+    public function getRatings($userId) {
+		$result = mysql_query("SELECT u.uiaa, a.howclimbed, a.categorie, a.crdate, a.route_id, a.user_id FROM rb_ratings a LEFT JOIN tx_dihlroutes_uiaa u ON a.rating = u.uid LEFT JOIN tx_dihlroutes_routelist r ON a.route_id = r.uid WHERE a.user_id = $userId AND r.deleted = 0");
+        $no_of_rows = mysql_num_rows($result);
+        if ($no_of_rows > 0) {
+			// Ratings zurückgeben
+            return $result;
+        } else {
+            // Keine Ratings gefunden
+            return false;
+        }
+    }
+	
+	/**
      * Routen auslesen
      */
     public function getRoutes() {

@@ -24,9 +24,13 @@ public class DBConnector {
 	private Activity activitiy = null;	
 	private ProgressDialog progressDialog = null;
 	private String result = "";
+	private String routes = "";
+	private String ratings = "";
+	private DBConnector dbC = null;
 
 	public DBConnector(Activity a) {
 		this.activitiy = a;
+		dbC = this;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -38,11 +42,14 @@ public class DBConnector {
 		db.close();
 	}
 	
-	public void syncDatabase() {	//Startet ein AsyncTask um die lokale DB mit der entfernten DB zu synchronisieren
-		 BasicNameValuePair basicNameValuePair = new BasicNameValuePair("tag","getroutes");
+	public void syncDB(int userId) {	//Startet ein AsyncTask um die lokale DB mit der entfernten DB zu synchronisieren
+		 BasicNameValuePair getRoutesPair = new BasicNameValuePair("tag","getroutes");
+		 BasicNameValuePair getRatingsPair = new BasicNameValuePair("tag","getratings");
+		 BasicNameValuePair userIdPair = new BasicNameValuePair("userid",userId+"");
 		 
 		try {
-			result = new JSONParser(activitiy).execute(basicNameValuePair).get();
+			routes = new JSONParser(activitiy).execute(getRoutesPair).get();
+			ratings = new JSONParser(activitiy).execute(getRatingsPair, userIdPair).get();
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -53,14 +60,15 @@ public class DBConnector {
 		
 		//start the progress dialog
 
-		progressDialog = ProgressDialog.show(activitiy, "", "Datenbank Sync...");
+		progressDialog = ProgressDialog.show(activitiy, "", "DB Sync...");
 		new Thread() {
+			@SuppressLint("SimpleDateFormat")
 			public void run() {
-				//JSON Daten parsen
+				//Routen in die DB schreiben
 				try {
-					JSONObject jObj = new JSONObject(result);
-					Log.i("DAV", "snyc_success: " + jObj.getString("success"));
-					Log.i("DAV", "snyc_error: " + jObj.getString("error"));
+					JSONObject jObj = new JSONObject(routes);
+					Log.i("DAV", "routeSnyc_success: " + jObj.getString("success"));
+					Log.i("DAV", "routeSnyc_error: " + jObj.getString("error"));
 					JSONArray jArray = jObj.getJSONArray("route");
 				    for(int i=0; i < jArray.length(); i++){
 						JSONObject json_data = jArray.getJSONObject(i);
@@ -89,6 +97,37 @@ public class DBConnector {
 									json_data.getString("sektor"), json_data.getInt("dateon"), json_data.getInt("tr"), avarageRating, json_data.getInt("rating_count"),
 									json_data.getString("avarage_categorie"), json_data.getInt("flash_count"), json_data.getInt("redpoint_count"), json_data.getInt("not_climbed_count"));
 							db.store(r);
+						}
+					}
+				} catch (JSONException e){
+					Log.e("log_tag", "Error parsing data "+e.toString());
+				}
+				
+				//Ratings in die DB schreiben
+				try {
+					JSONObject jObj = new JSONObject(ratings);
+					Log.i("DAV", "ratingSnyc_success: " + jObj.getString("success"));
+					Log.i("DAV", "ratingSnyc_error: " + jObj.getString("error"));
+					JSONArray jArray = jObj.getJSONArray("rating");
+				    for(int i=0; i < jArray.length(); i++){
+						JSONObject json_data = jArray.getJSONObject(i);
+
+						//db4o
+						Rating a = new Rating(dbC.getRoute(new Route(json_data.getInt("route_id"))), dbC.getUser(new User(json_data.getInt("user_id"))));
+						ObjectSet<Rating> dbresult = db.queryByExample(a);
+						
+						if(dbresult.isEmpty()) {	
+							SimpleDateFormat sdfToDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					        Date date = null;
+							try {									   
+								date = sdfToDate.parse(json_data.getString("crdate"));
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							a = new Rating(json_data.getString("uiaa"), json_data.getString("howclimbed"), json_data.getString("categorie"),
+									date, dbC.getUser(new User(json_data.getInt("user_id"))), dbC.getRoute(new Route(json_data.getInt("route_id"))), true);
+							db.store(a);
 						}
 					}
 				} catch (JSONException e){
@@ -177,8 +216,8 @@ public class DBConnector {
 			Log.i("DAV", "registerUser_error: " + jObj.getString("error"));
 			if(jObj.getString("success").equals("1")){
 				JSONObject jsonUser = jObj.getJSONObject("user");
-				Log.i("DAV", "setRouteRating_name: " + jsonUser.getString("name"));
-				Log.i("DAV", "setRouteRating_email: " + jsonUser.getString("email"));
+				Log.i("DAV", "registerUser_name: " + jsonUser.getString("name"));
+				Log.i("DAV", "registerUser_email: " + jsonUser.getString("email"));
 			}
 			if(jObj.getString("success").equals("1")) {
 				Toast.makeText(activitiy, "Erfolgreich Registriert", Toast.LENGTH_LONG).show();
@@ -218,9 +257,9 @@ public class DBConnector {
 			if(jObj.getString("success").equals("1")) {
 				if(jObj.getString("success").equals("1")){
 					JSONObject jsonUser = jObj.getJSONObject("user");
-					Log.i("DAV", "setRouteRating_uid: " + jsonUser.getInt("uid"));
-					Log.i("DAV", "setRouteRating_name: " + jsonUser.getString("name"));
-					Log.i("DAV", "setRouteRating_email: " + jsonUser.getString("email"));
+					Log.i("DAV", "checkUser_uid: " + jsonUser.getInt("uid"));
+					Log.i("DAV", "checkUser_name: " + jsonUser.getString("name"));
+					Log.i("DAV", "checkUser_email: " + jsonUser.getString("email"));
 					userId = jsonUser.getInt("uid");
 					User u = new User(jsonUser.getInt("uid"), jsonUser.getString("email"), jsonUser.getString("name"));	//User zum Speichern in lokale die Datenbank anlegen
 					ObjectSet<User> dbresult = db.queryByExample(u);
@@ -287,8 +326,16 @@ public class DBConnector {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Rating r = new Rating(rating, howClimbed, categorie, date, this.getUser(new User(userId)), this.getRoute(new Route(routeId)), false);	//Rating zum Speichern in die Datenbank anlegen
-				db.store(r);	//Rating in der lokalen DB speichern
+				Route r = this.getRoute(new Route(routeId));
+				Rating a = new Rating(rating, howClimbed, categorie, date, this.getUser(new User(userId)), r, true);	//Rating zum Speichern in die Datenbank anlegen
+				db.store(a);	//Rating in der lokalen DB speichern
+				if(howClimbed.equals("Flash")) {
+					r.setFlashCount(r.getFlashCount()+1);
+				} else {
+					r.setRedpointCount(r.getRedpointCount()+1);
+				}
+				r.setNotClimbedCount(r.getNotClimbedCount()-1);
+				db.store(r);
 			} else {
 				Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
 				success = false;

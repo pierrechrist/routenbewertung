@@ -35,7 +35,7 @@ public class MenuActivity extends Activity {
 		db.openDB();
 		
 		if(userId != 0){
-			db.syncDatabase();
+			db.syncDB(userId);
 			User u = new User(userId, null, null);
 			User uResult = db.getUser(u);
 			Log.i("DAV", "UserName: " + u.getUserName());

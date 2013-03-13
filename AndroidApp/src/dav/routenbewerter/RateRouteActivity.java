@@ -58,7 +58,7 @@ public class RateRouteActivity extends Activity {
 	          public void onClick(View v)
 	          {
 	        	  Log.i("DAV", "Rating: " + rating.getSelectedItem().toString());
-	        	  db.setRouteRating(rating.getSelectedItem().toString(), categorie.getSelectedItem().toString(), howClimbed.getSelectedItem().toString(), userId, routeId);
+	        	  db.setRouteRating(rating.getSelectedItem().toString(), howClimbed.getSelectedItem().toString(), categorie.getSelectedItem().toString(), userId, routeId);
 	        	  finish();
 	          }
 	        });

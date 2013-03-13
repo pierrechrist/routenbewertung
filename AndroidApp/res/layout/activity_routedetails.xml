@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </LinearLayout>
 
     <RelativeLayout
@@ -200,6 +201,70 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10pt" >
+
+        <TextView
+            android:id="@+id/routedetailsOwnRatingLable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/routedetails_ownRating"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/routedetailsOwnRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/routedetailsOwnHowClimbedLable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/routedetails_ownHowClimbed"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/routedetailsOwnHowClimbed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/routedetailsOwnCategorieLable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/routedetails_ownCategorie"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/routedetailsOwnCategorie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <Button
