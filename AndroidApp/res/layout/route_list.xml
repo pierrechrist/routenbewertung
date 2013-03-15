@@ -10,11 +10,12 @@
         android:id="@+id/listRouteNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
-        android:text="#512"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:drawableLeft="@drawable/no_color"
+        android:drawablePadding="15dp"
+        android:text="18"
+        android:textAppearance="?android:attr/textAppearanceLarge" >
+    </TextView>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -23,28 +24,12 @@
         android:layout_centerVertical="true"
         android:gravity="center_vertical" >
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/listRouteWallName"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/listRouteWallName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Entega"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/listRouteColor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="weiß"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:text="Entega"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/listRouteRating"

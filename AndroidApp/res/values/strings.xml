@@ -7,6 +7,7 @@
     <string name="cancel_button">Abbrechen</string>
     <string name="flashcount">Flash:</string>
     <string name="rotpunktcount">Rotpunkt:</string>
+    <string name="projectcount">Projekt:</string>
     <string name="notclimbedcount">Nicht geklettert:</string>
      
     <string name="login_title">Login</string>

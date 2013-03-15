@@ -17,6 +17,7 @@ public class PersonalDetailsActivity extends Activity {
 	private TextView routeCount;
 	private TextView flashCount;
 	private TextView redPointCount;
+	private TextView projectCount;
 	private TextView notClimbedCount;
 
 	@Override
@@ -29,6 +30,8 @@ public class PersonalDetailsActivity extends Activity {
 		flashCount = (TextView)this.findViewById(R.id.personalFlashcount);
 		redPointCount = (TextView)this.findViewById(R.id.personalRotpunktcount);
 		notClimbedCount = (TextView)this.findViewById(R.id.personalNotclimbedcount);
+		projectCount = (TextView)this.findViewById(R.id.personalProjectcount);
+
 		
 		Intent i = getIntent();
 		userId = i.getIntExtra("userId", 0);
@@ -44,12 +47,15 @@ public class PersonalDetailsActivity extends Activity {
 		int flashC = db.getRatings(a).size();
 		a.setHowClimbed("Rotpunkt");
 		int redpointC = db.getRatings(a).size();
+		a.setHowClimbed("Projekt");
+		int projectC = db.getRatings(a).size();
 		int routeC = db.getRoutes().size();
 		
 		userName.setText(u.getUserName());
 		routeCount.setText(Integer.toString(routeC));
 		flashCount.setText(Integer.toString(flashC));
 		redPointCount.setText(Integer.toString(redpointC));
+		projectCount.setText(Integer.toString(projectC));
 		notClimbedCount.setText(Integer.toString(routeC-(flashC+redpointC)));
 		
 	}

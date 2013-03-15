@@ -31,6 +31,7 @@ public class RouteDetailsActivity extends Activity {
 	private TextView categorie;
 	private TextView flash;
 	private TextView redPoint;
+	private TextView project;
 	private TextView notClimbed;
 	private TextView ownRating;
 	private TextView ownHowClimbed;
@@ -54,6 +55,7 @@ public class RouteDetailsActivity extends Activity {
 		categorie = (TextView)this.findViewById(R.id.routedetailsAvaragecategorie);
 		flash = (TextView)this.findViewById(R.id.routedetailsFlashcount);
 		redPoint = (TextView)this.findViewById(R.id.routedetailsRotpunktcount);
+		project = (TextView)this.findViewById(R.id.routedetailsProjectcount);
 		notClimbed = (TextView)this.findViewById(R.id.routedetailsNotclimbedcount);
 		ownRating = (TextView)this.findViewById(R.id.routedetailsOwnRating);
 		ownHowClimbed = (TextView)this.findViewById(R.id.routedetailsOwnHowClimbed);
@@ -111,16 +113,19 @@ public class RouteDetailsActivity extends Activity {
 		
 		String date = new SimpleDateFormat("dd.MM.yyyy").format(new Date(r.getCreationDate() * 1000L));		
 		
-		routeNumber.setText(Integer.toString(r.getRouteNumber()));
+		double allCount = r.getFlashCount() + r.getRedpointCount() + r.getNotClimbedCount() + r.getProjectCount();
+		
+		routeNumber.setText(Integer.toString(r.getBoltRow()));
 		wallName.setText(r.getWallName());
 		routeDriver.setText(r.getRouteDriver());
 		creationDate.setText(date);
 		handleColor.setText(r.getHandleColor());
 		rating.setText(r.getAverageRating());
 		categorie.setText(r.getAvarageCategorie());
-		flash.setText(Integer.toString(r.getFlashCount()));
-		redPoint.setText(Integer.toString(r.getRedpointCount()));
-		notClimbed.setText(Integer.toString(r.getNotClimbedCount()));
+		flash.setText(Math.round((r.getFlashCount()/allCount*100)*100)/100.0+"%");
+		redPoint.setText(Math.round((r.getRedpointCount()/allCount*100)*100)/100.0+"%");
+		project.setText(Math.round((r.getProjectCount()/allCount*100)*100)/100.0+"%");
+		notClimbed.setText(Math.round((r.getNotClimbedCount()/allCount*100)*100)/100.0+"%");
 	        
 		Rating a = new Rating(r, new User(userId));
 		a = db.getRating(a);

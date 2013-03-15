@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="dav.routenbewerter.RateRouteActivity" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/RateRouteActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="611" y="532"/>    
+    <position height="-1" width="-1" x="609" y="592"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="dav.routenbewerter.RouteDetailsActivity" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/RouteDetailsActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="383" y="407"/>    
+    <position height="-1" width="-1" x="377" y="464"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="dav.routenbewerter.RoutesListActivity" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/RoutesListActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="371" y="765"/>    
+    <position height="-1" width="-1" x="359" y="875"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -75,7 +75,7 @@
   </class>  
   <class id="9" language="java" name="dav.routenbewerter.DBConnector" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/DBConnector.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="636" y="140"/>    
+    <position height="-1" width="-1" x="639" y="174"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -84,7 +84,7 @@
   </class>  
   <class id="10" language="java" name="dav.routenbewerter.Route" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/Route.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1173" y="799"/>    
+    <position height="-1" width="-1" x="1173" y="862"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -128,18 +128,18 @@
   </association>  
   <association id="17">    
     <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="18" name="user"/>      
+      <attribute id="18" name="route"/>      
       <multiplicity id="19" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="20">    
     <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="21" name="route"/>      
+      <attribute id="21" name="user"/>      
       <multiplicity id="22" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

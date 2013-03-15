@@ -41,9 +41,8 @@ public class MainActivity extends Activity {
 		username.setText(sp.getString("Unm", null));
 		password.setText(sp.getString("Psw", null));
 		checkBox.setChecked(sp.getBoolean("Chk", false));
-		
 		db = new DBConnector(this);
-		
+
 		login.setOnClickListener(new OnClickListener()
 	        {
 	          public void onClick(View v)
@@ -51,25 +50,29 @@ public class MainActivity extends Activity {
 	        	  if(username.getText().toString().equals("") || password.getText().toString().equals("")) {
 	        		  Toast.makeText(getApplicationContext(), "Kein Benutzername oder Passwort eingegeben!", Toast.LENGTH_LONG).show();
 	        	  } else {
-		        	  userId = db.checkUser(username.getText().toString(), password.getText().toString());
-		        	  if(userId != 0) {
-			              Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
-			              menuActivity.putExtra("userId", userId);
-			              
-			              SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
-			              SharedPreferences.Editor ed = sp.edit();
-			              if(checkBox.isChecked()) {
-			            	  ed.putString("Unm",username.getText().toString());              
-			            	  ed.putString("Psw",password.getText().toString()); 
-			            	  ed.putBoolean("Chk", true);
-			              } else {
-			            	  ed.putString("Unm",null);              
-				              ed.putString("Psw",null);
-				              ed.putBoolean("Chk", false);
-			              }
-			              ed.commit();		           		              
-			              startActivity(menuActivity);
-		        	  } 
+	        		  if(db.isOnline()) {
+			        	  userId = db.checkUser(username.getText().toString(), password.getText().toString());
+			        	  if(userId != 0) {
+				              Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
+				              menuActivity.putExtra("userId", userId);
+				              
+				              SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+				              SharedPreferences.Editor ed = sp.edit();
+				              if(checkBox.isChecked()) {
+				            	  ed.putString("Unm",username.getText().toString());              
+				            	  ed.putString("Psw",password.getText().toString()); 
+				            	  ed.putBoolean("Chk", true);
+				              } else {
+				            	  ed.putString("Unm",null);              
+					              ed.putString("Psw",null);
+					              ed.putBoolean("Chk", false);
+				              }
+				              ed.commit();		           		              
+				              startActivity(menuActivity);
+			        	  } 
+	        		  } else {
+	        			  Toast.makeText(getApplicationContext(), "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
+	        		  }
 	        	  }
 	          }
 	        });
@@ -79,9 +82,12 @@ public class MainActivity extends Activity {
 	        {
 	          public void onClick(View v)
 	          {
-	              Intent registerActivity = new Intent(getApplicationContext(), RegisterActivity.class);
-	              
-	              startActivity(registerActivity);
+	        	  if(db.isOnline()) {
+		              Intent registerActivity = new Intent(getApplicationContext(), RegisterActivity.class);
+		              startActivity(registerActivity);
+	        	  } else {
+        			  Toast.makeText(getApplicationContext(), "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
+        		  }
 	          }
 	        });
 		
@@ -90,7 +96,8 @@ public class MainActivity extends Activity {
           public void onClick(View v)
           {
               Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
-              menuActivity.putExtra("userId", 0);
+              userId = db.getUser(new User(0, null, username.getText().toString())).getUserId();
+              menuActivity.putExtra("userId", userId);
               startActivity(menuActivity);
           }
         });

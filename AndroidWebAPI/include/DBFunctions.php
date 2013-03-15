@@ -51,10 +51,11 @@ class DBFunctions {
      * Routen auslesen
      */
     public function getRoutes() {
-		$result = mysql_query("SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor, r.tr,
+		$result = mysql_query("SELECT r.uid, u.uiaa, r.color, r.dateon, r.createdby, s.sektor, r.tr, r.boltrow,
 			(SELECT COUNT(*) FROM rb_ratings WHERE route_id = r.uid) as rating_count,
 			(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Flash' AND route_id = r.uid) as flash_count,
 			(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Rotpunkt' AND route_id = r.uid) as redpoint_count,
+			(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Projekt' AND route_id = r.uid) as project_count,
 			(SELECT COUNT(*)-rating_count FROM rb_user) as not_climbed_count,
 			(SELECT u.uiaa FROM rb_route_details LEFT JOIN tx_dihlroutes_uiaa u ON avarage_rating = u.uid  WHERE route_id = r.uid) as avarage_rating,
 			(SELECT avarage_categorie FROM rb_route_details WHERE route_id = r.uid) as avarage_categorie

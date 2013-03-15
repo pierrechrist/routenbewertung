@@ -38,5 +38,6 @@
     <string-array name="howClimbed">
         <item>Flash</item>
         <item>Rotpunkt</item>
+        <item>Projekt</item>
     </string-array>
 </resources>

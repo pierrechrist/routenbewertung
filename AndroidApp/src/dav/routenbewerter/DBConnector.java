@@ -13,6 +13,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -27,10 +29,14 @@ public class DBConnector {
 	private String routes = "";
 	private String ratings = "";
 	private DBConnector dbC = null;
+	private NetworkInfo ni = null;
+	ConnectivityManager cm = null;
 
 	public DBConnector(Activity a) {
 		this.activitiy = a;
 		dbC = this;
+		cm = (ConnectivityManager) a.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ni = cm.getActiveNetworkInfo();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -42,103 +48,113 @@ public class DBConnector {
 		db.close();
 	}
 	
+	public Boolean isOnline() {
+		if(ni != null && ni.isConnected()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void syncDB(int userId) {	//Startet ein AsyncTask um die lokale DB mit der entfernten DB zu synchronisieren
-		 BasicNameValuePair getRoutesPair = new BasicNameValuePair("tag","getroutes");
-		 BasicNameValuePair getRatingsPair = new BasicNameValuePair("tag","getratings");
-		 BasicNameValuePair userIdPair = new BasicNameValuePair("userid",userId+"");
-		 
-		try {
-			routes = new JSONParser(activitiy).execute(getRoutesPair).get();
-			ratings = new JSONParser(activitiy).execute(getRatingsPair, userIdPair).get();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ExecutionException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		//start the progress dialog
-
-		progressDialog = ProgressDialog.show(activitiy, "", "DB Sync...");
-		new Thread() {
-			@SuppressLint("SimpleDateFormat")
-			public void run() {
-				//Routen in die DB schreiben
-				try {
-					JSONObject jObj = new JSONObject(routes);
-					Log.i("DAV", "routeSnyc_success: " + jObj.getString("success"));
-					Log.i("DAV", "routeSnyc_error: " + jObj.getString("error"));
-					JSONArray jArray = jObj.getJSONArray("route");
-				    for(int i=0; i < jArray.length(); i++){
-						JSONObject json_data = jArray.getJSONObject(i);
-
-						//db4o
-						Route r = new Route(json_data.getInt("uid"));
-						ObjectSet<Route> dbresult = db.queryByExample(r);
-						
-						String avarageRating = null;
-						if(json_data.getString("avarage_rating").equals("null"))
-							avarageRating = json_data.getString("uiaa");
-						else
-							avarageRating = json_data.getString("avarage_rating");
-						
-						if(!dbresult.isEmpty()){	//Wenn es den Eintrag schon in der DB gibt wird er nur geupdated
-							Route found = dbresult.next();
-							found.setAverageRating(avarageRating);
-							found.setAvarageCategorie(json_data.getString("avarage_categorie"));
-							found.setFlashCount(json_data.getInt("flash_count"));
-							found.setRedpointCount(json_data.getInt("redpoint_count"));
-							found.setNotClimbedCount(json_data.getInt("not_climbed_count"));
-							db.store(found);
-						}
-						else {	//Ansonsten wird ein neuer Eintrag angelegt
-							r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), 
-									json_data.getString("sektor"), json_data.getInt("dateon"), json_data.getInt("tr"), avarageRating, json_data.getInt("rating_count"),
-									json_data.getString("avarage_categorie"), json_data.getInt("flash_count"), json_data.getInt("redpoint_count"), json_data.getInt("not_climbed_count"));
-							db.store(r);
-						}
-					}
-				} catch (JSONException e){
-					Log.e("log_tag", "Error parsing data "+e.toString());
-				}
-				
-				//Ratings in die DB schreiben
-				try {
-					JSONObject jObj = new JSONObject(ratings);
-					Log.i("DAV", "ratingSnyc_success: " + jObj.getString("success"));
-					Log.i("DAV", "ratingSnyc_error: " + jObj.getString("error"));
-					JSONArray jArray = jObj.getJSONArray("rating");
-				    for(int i=0; i < jArray.length(); i++){
-						JSONObject json_data = jArray.getJSONObject(i);
-
-						//db4o
-						Rating a = new Rating(dbC.getRoute(new Route(json_data.getInt("route_id"))), dbC.getUser(new User(json_data.getInt("user_id"))));
-						ObjectSet<Rating> dbresult = db.queryByExample(a);
-						
-						if(dbresult.isEmpty()) {	
-							SimpleDateFormat sdfToDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					        Date date = null;
-							try {									   
-								date = sdfToDate.parse(json_data.getString("crdate"));
-							} catch (ParseException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+		if(isOnline()) { 
+			BasicNameValuePair getRoutesPair = new BasicNameValuePair("tag","getroutes");
+			BasicNameValuePair getRatingsPair = new BasicNameValuePair("tag","getratings");
+			BasicNameValuePair userIdPair = new BasicNameValuePair("userid",userId+"");
+			 
+			try {
+				routes = new JSONParser(activitiy).execute(getRoutesPair).get();
+				ratings = new JSONParser(activitiy).execute(getRatingsPair, userIdPair).get();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ExecutionException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			//start the progress dialog
+	
+			progressDialog = ProgressDialog.show(activitiy, "", "DB Sync...");
+			new Thread() {
+				@SuppressLint("SimpleDateFormat")
+				public void run() {
+					//Routen in die DB schreiben
+					try {
+						JSONObject jObj = new JSONObject(routes);
+						Log.i("DAV", "routeSnyc_success: " + jObj.getString("success"));
+						Log.i("DAV", "routeSnyc_error: " + jObj.getString("error"));
+						JSONArray jArray = jObj.getJSONArray("route");
+					    for(int i=0; i < jArray.length(); i++){
+							JSONObject json_data = jArray.getJSONObject(i);
+	
+							//db4o
+							Route r = new Route(json_data.getInt("uid"));
+							ObjectSet<Route> dbresult = db.queryByExample(r);
+							
+							String avarageRating = null;
+							if(json_data.getString("avarage_rating").equals("null"))
+								avarageRating = json_data.getString("uiaa");
+							else
+								avarageRating = json_data.getString("avarage_rating");
+							
+							if(!dbresult.isEmpty()){	//Wenn es den Eintrag schon in der DB gibt wird er nur geupdated
+								Route found = dbresult.next();
+								found.setAverageRating(avarageRating);
+								found.setAvarageCategorie(json_data.getString("avarage_categorie"));
+								found.setFlashCount(json_data.getInt("flash_count"));
+								found.setRedpointCount(json_data.getInt("redpoint_count"));
+								found.setNotClimbedCount(json_data.getInt("not_climbed_count"));
+								db.store(found);
 							}
-							a = new Rating(json_data.getString("uiaa"), json_data.getString("howclimbed"), json_data.getString("categorie"),
-									date, dbC.getUser(new User(json_data.getInt("user_id"))), dbC.getRoute(new Route(json_data.getInt("route_id"))), true);
-							db.store(a);
+							else {	//Ansonsten wird ein neuer Eintrag angelegt
+								r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), 
+										json_data.getString("sektor"), json_data.getInt("dateon"), json_data.getInt("tr"), json_data.getInt("boltrow"), avarageRating, json_data.getInt("rating_count"),
+										json_data.getString("avarage_categorie"), json_data.getInt("flash_count"), json_data.getInt("redpoint_count"), json_data.getInt("project_count"), json_data.getInt("not_climbed_count"));
+								db.store(r);
+							}
 						}
+					} catch (JSONException e){
+						Log.e("log_tag", "Error parsing data "+e.toString());
 					}
-				} catch (JSONException e){
-					Log.e("log_tag", "Error parsing data "+e.toString());
-				}
-				
-				// dismiss the progress dialog
-				progressDialog.dismiss();
+					
+					//Ratings in die DB schreiben
+					try {
+						JSONObject jObj = new JSONObject(ratings);
+						Log.i("DAV", "ratingSnyc_success: " + jObj.getString("success"));
+						Log.i("DAV", "ratingSnyc_error: " + jObj.getString("error"));
+						JSONArray jArray = jObj.getJSONArray("rating");
+					    for(int i=0; i < jArray.length(); i++){
+							JSONObject json_data = jArray.getJSONObject(i);
+	
+							//db4o
+							Rating a = new Rating(dbC.getRoute(new Route(json_data.getInt("route_id"))), dbC.getUser(new User(json_data.getInt("user_id"))));
+							ObjectSet<Rating> dbresult = db.queryByExample(a);
+							
+							if(dbresult.isEmpty()) {	
+								SimpleDateFormat sdfToDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						        Date date = null;
+								try {									   
+									date = sdfToDate.parse(json_data.getString("crdate"));
+								} catch (ParseException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								a = new Rating(json_data.getString("uiaa"), json_data.getString("howclimbed"), json_data.getString("categorie"),
+										date, dbC.getUser(new User(json_data.getInt("user_id"))), dbC.getRoute(new Route(json_data.getInt("route_id"))), true);
+								db.store(a);
+							}
+						}
+					} catch (JSONException e){
+						Log.e("log_tag", "Error parsing data "+e.toString());
+					}
+					
+					// dismiss the progress dialog
+					progressDialog.dismiss();
+			}
+	
+			}.start();
 		}
-
-		}.start();
 	}
 	
 	public ObjectSet<Route> getRoutes(Route r) {	//Holt alle Routen die dem suchparameter entsprechen
@@ -289,60 +305,77 @@ public class DBConnector {
 	public Boolean setRouteRating(String rating, String howClimbed, String categorie, int userId, int routeId) {
 		Boolean success = false;
 		
-		//Rating in die entfernte DB schreiben
-		BasicNameValuePair tag = new BasicNameValuePair("tag","setrating");
-		BasicNameValuePair pairRouteId = new BasicNameValuePair("routeid",routeId+"");
-		BasicNameValuePair pairUserId = new BasicNameValuePair("userid",userId+"");
-		BasicNameValuePair pairCategorie = new BasicNameValuePair("categorie",categorie);
-		BasicNameValuePair pairHowClimbed = new BasicNameValuePair("howclimbed",howClimbed);
-		BasicNameValuePair pairRating = new BasicNameValuePair("rating",getUiaa(rating)+"");
-		
-		String result = "";
-		try {
-			Log.i("DAV", "next up AsyncTask");
-			AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, pairRouteId, pairUserId, pairCategorie, pairHowClimbed, pairRating);
-			result = (String)parser.get();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ExecutionException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		// try parse the string to a JSON object
-		JSONObject jObj = null;
-		try {
-        	jObj = new JSONObject(result);
-        	Log.i("DAV", "setRouteRating_success: " + jObj.getString("success"));
-			Log.i("DAV", "setRouteRating_error: " + jObj.getString("error"));
-			if(jObj.getString("success").equals("1")) {
-				success = true;
-				SimpleDateFormat sdfToDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		        Date date = null;
-		        JSONObject jsonRating = jObj.getJSONObject("rating");
-				try {									   
-					date = sdfToDate.parse(jsonRating.getString("created_at"));
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Route r = this.getRoute(new Route(routeId));
-				Rating a = new Rating(rating, howClimbed, categorie, date, this.getUser(new User(userId)), r, true);	//Rating zum Speichern in die Datenbank anlegen
-				db.store(a);	//Rating in der lokalen DB speichern
-				if(howClimbed.equals("Flash")) {
-					r.setFlashCount(r.getFlashCount()+1);
-				} else {
-					r.setRedpointCount(r.getRedpointCount()+1);
-				}
-				r.setNotClimbedCount(r.getNotClimbedCount()-1);
-				db.store(r);
-			} else {
-				Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
-				success = false;
+		if(isOnline()) {
+			//Rating in die entfernte DB schreiben
+			BasicNameValuePair tag = new BasicNameValuePair("tag","setrating");
+			BasicNameValuePair pairRouteId = new BasicNameValuePair("routeid",routeId+"");
+			BasicNameValuePair pairUserId = new BasicNameValuePair("userid",userId+"");
+			BasicNameValuePair pairCategorie = new BasicNameValuePair("categorie",categorie);
+			BasicNameValuePair pairHowClimbed = new BasicNameValuePair("howclimbed",howClimbed);
+			BasicNameValuePair pairRating = new BasicNameValuePair("rating",getUiaa(rating)+"");
+			
+			String result = "";
+			try {
+				Log.i("DAV", "next up AsyncTask");
+				AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, pairRouteId, pairUserId, pairCategorie, pairHowClimbed, pairRating);
+				result = (String)parser.get();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ExecutionException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-        } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
-        }
+			// try parse the string to a JSON object
+			JSONObject jObj = null;
+			try {
+	        	jObj = new JSONObject(result);
+	        	Log.i("DAV", "setRouteRating_success: " + jObj.getString("success"));
+				Log.i("DAV", "setRouteRating_error: " + jObj.getString("error"));
+				if(jObj.getString("success").equals("1")) {
+					success = true;
+					SimpleDateFormat sdfToDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			        Date date = null;
+			        JSONObject jsonRating = jObj.getJSONObject("rating");
+					try {									   
+						date = sdfToDate.parse(jsonRating.getString("created_at"));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					Route r = this.getRoute(new Route(routeId));
+					Rating a = new Rating(rating, howClimbed, categorie, date, this.getUser(new User(userId)), r, true);	//Rating zum Speichern in die Datenbank anlegen
+					db.store(a);	//Rating in der lokalen DB speichern
+					if(howClimbed.equals("Flash")) {
+						r.setFlashCount(r.getFlashCount()+1);
+					} else if(howClimbed.equals("Rotpunkt")) {
+						r.setRedpointCount(r.getRedpointCount()+1);
+					} else {
+						r.setProjectCount(r.getProjectCount()+1);
+					}
+					r.setNotClimbedCount(r.getNotClimbedCount()-1);
+					db.store(r);
+				} else {
+					Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
+					success = false;
+				}
+	        } catch (JSONException e) {
+	            Log.e("JSON Parser", "Error parsing data " + e.toString());
+	        }
+		} else {
+			Route r = this.getRoute(new Route(routeId));
+			Rating a = new Rating(rating, howClimbed, categorie, null, this.getUser(new User(userId)), r, false);	//Rating zum Speichern in die Datenbank anlegen
+			db.store(a);	//Rating in der lokalen DB speichern
+			if(howClimbed.equals("Flash")) {
+				r.setFlashCount(r.getFlashCount()+1);
+			} else if(howClimbed.equals("Rotpunkt")) {
+				r.setRedpointCount(r.getRedpointCount()+1);
+			} else {
+				r.setProjectCount(r.getProjectCount()+1);
+			}
+			r.setNotClimbedCount(r.getNotClimbedCount()-1);
+			db.store(r);
+		}
 		
 		return success;
 	}

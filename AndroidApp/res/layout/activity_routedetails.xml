@@ -148,7 +148,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10pt" >
 
         <TextView
             android:id="@+id/routedetailsFlashcountLable"
@@ -184,6 +185,25 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/routedetailsProjectcountLable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/projectcount"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/routedetailsProjectcount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
+    
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >

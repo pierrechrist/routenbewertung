@@ -8,12 +8,14 @@ public class Route {
 	String wallName;
 	int creationDate;
 	int topRobe;
+	int boltRow;
 	String averageRating;
 	String avarageCategorie;
 	Rating personalRating;
 	int ratingCount;
 	int flashCount;
 	int redpointCount;
+	int projectCount;
 	int notClimbedCount;
 	
 		
@@ -31,10 +33,11 @@ public class Route {
 		this.personalRating = null;
 		this.flashCount = 0;
 		this.redpointCount = 0;
+		this.boltRow = 0;
 	}
-	
+
 	public Route(int routeNumber, String handleColor, String routeDriver,
-			String wallName, int creationDate, int topRobe, String averageRating, int ratingCount, String avarageCategorie, int flashCount, int redpointCount, int notClimbed) {
+			String wallName, int creationDate, int topRobe, int boltRow, String averageRating, int ratingCount, String avarageCategorie, int flashCount, int redpointCount, int projectCount, int notClimbed) {
 		super();
 		this.routeNumber = routeNumber;
 		this.handleColor = handleColor;
@@ -48,7 +51,9 @@ public class Route {
 		this.personalRating = null;
 		this.flashCount = flashCount;
 		this.redpointCount = redpointCount;
+		this.projectCount = projectCount;
 		this.notClimbedCount = notClimbed;
+		this.boltRow = boltRow;
 	}
 	
 	public int getRouteNumber() {
@@ -139,6 +144,23 @@ public class Route {
 	public void setNotClimbedCount(int notClimbedCount) {
 		this.notClimbedCount = notClimbedCount;
 	}	
+	
+	public int getBoltRow() {
+		return boltRow;
+	}
+
+	public void setBoltRow(int boltRow) {
+		this.boltRow = boltRow;
+	}
+
+	public int getProjectCount() {
+		return projectCount;
+	}
+
+	public void setProjectCount(int projectCount) {
+		this.projectCount = projectCount;
+	}
+	
 	
 	
 }

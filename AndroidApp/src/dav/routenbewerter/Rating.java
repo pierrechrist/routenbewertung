@@ -32,7 +32,7 @@ public class Rating {
 		this.date = null;
 		this.user = user;
 		this.route = route;
-		this.sent = true;
+		this.sent = false;
 	}
 	
 	public boolean isSent() {
