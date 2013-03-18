@@ -17,6 +17,89 @@
             android:text="@string/menu_title"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <CheckBox
+                android:id="@+id/filterWallNameLable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/routedetails_wallname" />
+
+            <EditText
+                android:id="@+id/filterWallName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10" android:inputType="text">
+
+                <requestFocus />
+            </EditText>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <CheckBox
+                android:id="@+id/filterRatingLable"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/rateroute_rating" />
+
+            <Spinner
+                android:id="@+id/filterRating"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <CheckBox
+                android:id="@+id/filterCategorieLable"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/rateroute_categorie" />
+
+            <Spinner
+                android:id="@+id/filterCategorie"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <CheckBox
+                android:id="@+id/filterHowClimbedLable"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/rateroute_climbed" />
+
+            <Spinner
+                android:id="@+id/filterHowClimbed"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/menuRoutesButton"
             android:layout_width="match_parent"

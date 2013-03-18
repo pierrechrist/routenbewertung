@@ -35,6 +35,28 @@ public class Rating {
 		this.sent = false;
 	}
 	
+	public Rating(User user) {
+		super();
+		this.rating = null;
+		this.howClimbed = null;
+		this.categorie = null;
+		this.date = null;
+		this.user = user;
+		this.route = null;
+		this.sent = false;
+	}
+	
+	public Rating(String howClimbed, User user) {
+		super();
+		this.rating = null;
+		this.howClimbed = howClimbed;
+		this.categorie = null;
+		this.date = null;
+		this.user = user;
+		this.route = null;
+		this.sent = false;
+	}
+	
 	public boolean isSent() {
 		return sent;
 	}

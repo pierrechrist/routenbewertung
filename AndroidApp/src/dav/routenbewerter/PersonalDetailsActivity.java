@@ -42,7 +42,7 @@ public class PersonalDetailsActivity extends Activity {
 		User u = new User(userId, null, null);
 		u = db.getUser(u);
 		
-		Rating a = new Rating(null, u);
+		Rating a = new Rating(u);
 		a.setHowClimbed("Flash");
 		int flashC = db.getRatings(a).size();
 		a.setHowClimbed("Rotpunkt");

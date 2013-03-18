@@ -9,13 +9,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class MenuActivity extends Activity {
 
 	private Button routeList;
 	private Button personalStats;
+	private Spinner rating;
+	private CheckBox ratingLable;
+	private Spinner categorie;
+	private CheckBox categorieLable;
+	private Spinner howClimbed;
+	private CheckBox howClimbedLable;
+	private EditText wallName;
+	private CheckBox wallNameLable;
 	private DBConnector db;
 	private int userId;
 
@@ -26,6 +38,25 @@ public class MenuActivity extends Activity {
 		
 		routeList = (Button) this.findViewById(R.id.menuRoutesButton);
 		personalStats = (Button) this.findViewById(R.id.menuPersonalButton);
+		
+		wallName = (EditText) findViewById(R.id.filterWallName);
+		rating = (Spinner) findViewById(R.id.filterRating);
+		categorie = (Spinner) findViewById(R.id.filterCategorie);
+		howClimbed = (Spinner) findViewById(R.id.filterHowClimbed);
+		wallNameLable = (CheckBox) findViewById(R.id.filterWallNameLable);
+		ratingLable = (CheckBox) findViewById(R.id.filterRatingLable);
+		categorieLable = (CheckBox) findViewById(R.id.filterCategorieLable);
+		howClimbedLable = (CheckBox) findViewById(R.id.filterHowClimbedLable);
+
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.ratingNumber, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		rating.setAdapter(adapter);
+		adapter = ArrayAdapter.createFromResource(this, R.array.categorie, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		categorie.setAdapter(adapter);
+		adapter = ArrayAdapter.createFromResource(this, R.array.howClimbed, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		howClimbed.setAdapter(adapter);
 		
 		Intent i = getIntent();
         // Receiving the Data
@@ -50,6 +81,15 @@ public class MenuActivity extends Activity {
 	          {
 	              Intent routesListActivity = new Intent(getApplicationContext(), RoutesListActivity.class);
 	              routesListActivity.putExtra("userId", userId);
+	              if(wallNameLable.isChecked())
+	            	  routesListActivity.putExtra("wallName", wallName.getText().toString());
+	              if(ratingLable.isChecked())
+	            	  routesListActivity.putExtra("rating", rating.getSelectedItem().toString());
+	              if(categorieLable.isChecked())
+	            	  routesListActivity.putExtra("categorie", categorie.getSelectedItem().toString());
+	              if(howClimbedLable.isChecked())
+	            	  routesListActivity.putExtra("howClimbed", howClimbed.getSelectedItem().toString());
+	              
 	              startActivity(routesListActivity);
 	          }
 	        });

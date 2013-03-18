@@ -1,5 +1,8 @@
 package dav.routenbewerter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.dav.routenbewerter.R;
 import com.db4o.ObjectSet;
 
@@ -16,7 +19,11 @@ public class RoutesListActivity extends ListActivity {
 
 	private DBConnector db;
 	private int userId;
-	private ObjectSet<Route> result = null;
+	private String rating;
+	private String wallName;
+	private String categorie;
+	private String howClimbed;
+	private List<Route> result = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +32,13 @@ public class RoutesListActivity extends ListActivity {
 		
 		Intent i = getIntent();
 		userId = i.getIntExtra("userId", 0);
+		rating = i.getStringExtra("rating");
+		wallName = i.getStringExtra("wallName");
+		categorie = i.getStringExtra("categorie");
+		howClimbed = i.getStringExtra("howClimbed");
+		
+		result = new ArrayList<Route>();
+		
 	}
 
 	@Override
@@ -61,11 +75,20 @@ public class RoutesListActivity extends ListActivity {
 		super.onResume();
 		db = new DBConnector(this);
 		db.openDB();
-		result = db.getRoutes();
+		if(howClimbed != null) {
+			Log.i("DAV", "howClimbed: " + howClimbed);
+			ObjectSet<Rating> ratings = db.getRatings(new Rating(howClimbed, db.getUser(new User(userId))));
+			Rating r = null;
+			while(ratings.hasNext()) {
+				r = ratings.next();
+				result.add(r.getRoute());
+			}
+		} else {
+			result = db.getRoutes(new Route(wallName, rating, categorie));
+		}
 		
 		ListView list = getListView();
-		ArrayAdapter<Route> adapter = new RouteAdapter(this, R.layout.route_list, result);
+		ArrayAdapter<Route> adapter = new RouteAdapter(this, R.layout.route_list, result, db.getRatings(new Rating(new User(userId))));
 	    list.setAdapter(adapter);
 	}
-
 }

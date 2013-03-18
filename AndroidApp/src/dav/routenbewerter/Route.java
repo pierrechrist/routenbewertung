@@ -35,6 +35,23 @@ public class Route {
 		this.redpointCount = 0;
 		this.boltRow = 0;
 	}
+	
+	public Route(String wallName, String rating, String categorie) {
+		super();
+		this.routeNumber = 0;
+		this.handleColor = null;
+		this.routeDriver = null;
+		this.wallName = wallName;
+		this.creationDate = 0;
+		this.topRobe = 0;
+		this.averageRating = rating;
+		this.ratingCount = 0;
+		this.avarageCategorie = categorie;
+		this.personalRating = null;
+		this.flashCount = 0;
+		this.redpointCount = 0;
+		this.boltRow = 0;
+	}
 
 	public Route(int routeNumber, String handleColor, String routeDriver,
 			String wallName, int creationDate, int topRobe, int boltRow, String averageRating, int ratingCount, String avarageCategorie, int flashCount, int redpointCount, int projectCount, int notClimbed) {
