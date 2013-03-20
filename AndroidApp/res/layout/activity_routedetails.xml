@@ -1,7 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent" 
+    xmlns:tools="http://schemas.android.com/tools">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -221,7 +225,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/routedetailsPieChart"
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:layout_weight="0.58"
+        android:contentDescription="PieChart" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -243,6 +255,7 @@
             android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:visibility="gone" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -294,3 +307,4 @@
         android:text="@string/rateroute_button" />
 
 </LinearLayout>
+</ScrollView>

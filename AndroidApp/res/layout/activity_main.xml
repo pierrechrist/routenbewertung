@@ -11,7 +11,7 @@
     tools:context=".MainActivity" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/routedetailsPieChart"
         android:layout_width="243dp"
         android:layout_height="148dp"
         android:contentDescription="DAV Logo"

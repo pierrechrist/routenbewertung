@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class RouteDetailsActivity extends Activity {
@@ -114,6 +116,11 @@ public class RouteDetailsActivity extends Activity {
 		String date = new SimpleDateFormat("dd.MM.yyyy").format(new Date(r.getCreationDate() * 1000L));		
 		
 		double allCount = r.getFlashCount() + r.getRedpointCount() + r.getNotClimbedCount() + r.getProjectCount();
+		float flashC = (float) (Math.round((r.getFlashCount()/allCount*100)*100)/100.0);
+		float redpointC = (float) (Math.round((r.getRedpointCount()/allCount*100)*100)/100.0);
+		float projectC = (float) (Math.round((r.getProjectCount()/allCount*100)*100)/100.0);
+		float notClimbedC = (float) (Math.round((r.getNotClimbedCount()/allCount*100)*100)/100.0);
+		
 		
 		routeNumber.setText(Integer.toString(r.getBoltRow()));
 		wallName.setText(r.getWallName());
@@ -122,11 +129,23 @@ public class RouteDetailsActivity extends Activity {
 		handleColor.setText(r.getHandleColor());
 		rating.setText(r.getAverageRating());
 		categorie.setText(r.getAvarageCategorie());
-		flash.setText(Math.round((r.getFlashCount()/allCount*100)*100)/100.0+"%");
-		redPoint.setText(Math.round((r.getRedpointCount()/allCount*100)*100)/100.0+"%");
-		project.setText(Math.round((r.getProjectCount()/allCount*100)*100)/100.0+"%");
-		notClimbed.setText(Math.round((r.getNotClimbedCount()/allCount*100)*100)/100.0+"%");
-	        
+		flash.setText(flashC+"%");
+		redPoint.setText(redpointC+"%");
+		project.setText(projectC+"%");
+		notClimbed.setText(notClimbedC+"%");
+	      
+		// get the imageview
+		ImageView imgView = (ImageView) findViewById(R.id.routedetailsPieChart);
+
+		// create pie chart Drawable and set it to ImageView
+		PieChart pieChart = new PieChart(450, 100, 20);
+		pieChart.addItem("Flash", Color.RED, flashC);
+		pieChart.addItem("Projekt", Color.GREEN, projectC);
+		pieChart.addItem("Rotpunkt", Color.BLUE, redpointC);
+		pieChart.addItem("nicht \n geklettert", Color.CYAN, notClimbedC);
+
+		imgView.setImageDrawable(pieChart);
+		
 		Rating a = new Rating(r, new User(userId));
 		a = db.getRating(a);
 		if(a != null) {
