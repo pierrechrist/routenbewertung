@@ -144,6 +144,20 @@ if (isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
 			$response["error_msg"] = "Keine Uiaa gefunden";
 			echo json_encode($response);
 		}
+	} else if ($tag == 'recoverpassword') {
+		$name = $_REQUEST['name'];
+		// Benutzer in der Datenbank suchen und Passwort zusenden
+		$user = $userF->recoverPassword($name);
+		if ($user != false) {
+			// Passwort erfolgreich zugesendet
+			$response["success"] = 1;			
+			echo json_encode($response);
+		} else {
+			// Benutzer nicht gefunden
+			$response["error"] = 1;
+			$response["error_msg"] = "Benutzer nicht gefunden";
+			echo json_encode($response);
+		}
 	} else {
         echo "Falsche Anfrage";
     }

@@ -112,4 +112,10 @@
             android:layout_height="wrap_content"
             android:text="@string/personal_button" />
 
+        <Button
+            android:id="@+id/menuQRCodeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/menuQRCode" />
+
     </LinearLayout>

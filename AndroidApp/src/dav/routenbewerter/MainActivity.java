@@ -3,7 +3,11 @@ package dav.routenbewerter;
 import com.dav.routenbewerter.R;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.Menu;
@@ -18,12 +22,13 @@ public class MainActivity extends Activity {
 
     private Button login;
     private Button register;
-    private Button offline;
+    private Button recoverPassword;
     private EditText username;
     private EditText password;
     private CheckBox checkBox;
     private DBConnector db;
     private int userId;
+    private final Context context = this;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,7 @@ public class MainActivity extends Activity {
 		
 		login = (Button) this.findViewById(R.id.loginButton);
 		register = (Button) this.findViewById(R.id.registerButton);
-		offline = (Button) this.findViewById(R.id.offlineButton);
+		recoverPassword = (Button) this.findViewById(R.id.recoverPasswordButton);
 		checkBox = (CheckBox) this.findViewById(R.id.loginCheckBox);
 		username = (EditText) this.findViewById(R.id.emailText);
 		password = (EditText) this.findViewById(R.id.passwordText);
@@ -72,6 +77,30 @@ public class MainActivity extends Activity {
 			        	  } 
 	        		  } else {
 	        			  Toast.makeText(getApplicationContext(), "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
+	        			  /* Alert Dialog Code Start*/     
+	        	            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+	        	            alert.setTitle("Offline Modus?"); //Set Alert dialog title here
+	        	            alert.setMessage("Es besteht keine Internetverbindung. Im Offline Modus fortfahren?"); //Message here
+	        	 
+	        	            alert.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+	        	            public void onClick(DialogInterface dialog, int whichButton) {
+	        	            	Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
+	        	                userId = db.getUser(new User(0, null, username.getText().toString())).getUserId();
+	        	                menuActivity.putExtra("userId", userId);
+	        	                menuActivity.putExtra("offline", true);
+	        	                startActivity(menuActivity);
+	        	 
+	        	              }
+	        	            });
+	        	 
+	        	            alert.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+	        	              public void onClick(DialogInterface dialog, int whichButton) {
+	        	                  dialog.cancel();
+	        	              }
+	        	            });
+	        	            AlertDialog alertDialog = alert.create();
+	        	            alertDialog.show();
+	        	       /* Alert Dialog Code End*/    
 	        		  }
 	        	  }
 	          }
@@ -91,14 +120,33 @@ public class MainActivity extends Activity {
 	          }
 	        });
 		
-		offline.setOnClickListener(new OnClickListener()
+		recoverPassword.setOnClickListener(new OnClickListener()
         {
           public void onClick(View v)
           {
-              Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
-              userId = db.getUser(new User(0, null, username.getText().toString())).getUserId();
-              menuActivity.putExtra("userId", userId);
-              startActivity(menuActivity);
+        	  /* Alert Dialog Code Start*/     
+	            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+	            alert.setTitle("Passwort vergessen?"); //Set Alert dialog title here
+	            alert.setMessage("Ihnen wird per eMail ein neues Passwort zugesendet. Wollen sie fortfahren?"); //Message here
+	 
+	            alert.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+	            @SuppressLint("CommitPrefEdits")
+				public void onClick(DialogInterface dialog, int whichButton) {
+	            	db.recoverPassword(username.getText().toString());
+	            	SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+		            SharedPreferences.Editor ed = sp.edit();
+		            ed.putBoolean("isPasswordResetted", true);
+	              }
+	            });
+	 
+	            alert.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+	              public void onClick(DialogInterface dialog, int whichButton) {
+	                  dialog.cancel();
+	              }
+	            });
+	            AlertDialog alertDialog = alert.create();
+	            alertDialog.show();
+	       /* Alert Dialog Code End*/  
           }
         });
 	}

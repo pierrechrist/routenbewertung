@@ -415,4 +415,40 @@ public class DBConnector {
 		
 		return uiaa;
 	}
+	
+	public Boolean recoverPassword(String userName) {
+		Boolean success = false;
+		if(isOnline()) { 
+			BasicNameValuePair tag = new BasicNameValuePair("tag","recoverpassword");
+			BasicNameValuePair userNamePair = new BasicNameValuePair("name",userName);
+			
+			 String result = "";
+				try {
+					AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, userNamePair);
+					result = (String)parser.get();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ExecutionException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				// try parse the string to a JSON object
+				JSONObject jObj = null;
+				try {
+					jObj = new JSONObject(result);
+					if(jObj.getString("success").equals("1")){
+						success = true;
+						Toast.makeText(activitiy, "Passwort an ihre eMail Adresse gesendet", Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
+					}
+		        } catch (JSONException e) {
+		            Log.e("JSON Parser", "Error parsing data " + e.toString());
+		        }
+		} else {
+			Toast.makeText(activitiy, "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
+		}
+		return success;
+	}
 }

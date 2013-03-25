@@ -1,6 +1,8 @@
 package dav.routenbewerter;
 
 import com.dav.routenbewerter.R;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -20,6 +22,7 @@ public class MenuActivity extends Activity {
 
 	private Button routeList;
 	private Button personalStats;
+	private Button qrCodeScanner;
 	private Spinner rating;
 	private CheckBox ratingLable;
 	private Spinner categorie;
@@ -30,11 +33,13 @@ public class MenuActivity extends Activity {
 	private CheckBox wallNameLable;
 	private DBConnector db;
 	private int userId;
+	private Activity activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
+		activity = this;
 		
 		routeList = (Button) this.findViewById(R.id.menuRoutesButton);
 		personalStats = (Button) this.findViewById(R.id.menuPersonalButton);
@@ -47,6 +52,7 @@ public class MenuActivity extends Activity {
 		ratingLable = (CheckBox) findViewById(R.id.filterRatingLable);
 		categorieLable = (CheckBox) findViewById(R.id.filterCategorieLable);
 		howClimbedLable = (CheckBox) findViewById(R.id.filterHowClimbedLable);
+		qrCodeScanner = (Button) findViewById(R.id.menuQRCodeButton);
 
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.ratingNumber, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -65,14 +71,14 @@ public class MenuActivity extends Activity {
 		db = new DBConnector(this);
 		db.openDB();
 		
-		if(userId != 0){
-			db.syncDB(userId);
-			User u = new User(userId, null, null);
-			User uResult = db.getUser(u);
-			Log.i("DAV", "UserName: " + u.getUserName());
+		User u = new User(userId, null, null);
+		User uResult = db.getUser(u);
+		
+		if(!i.getBooleanExtra("offline", false)){
+			//db.syncDB(userId);
 			Toast.makeText(getApplicationContext(), "UserId: "+uResult.getUserId()+" UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(getApplicationContext(), "Offline Modus", Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "Offline Modus, UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
 		}  
 		
 		routeList.setOnClickListener(new OnClickListener()
@@ -104,6 +110,15 @@ public class MenuActivity extends Activity {
 	              startActivity(personalDetailsActivity);
 	          }
 	        });
+		
+		qrCodeScanner.setOnClickListener(new OnClickListener()
+        {
+          public void onClick(View v)
+          {
+        	  IntentIntegrator integrator = new IntentIntegrator(activity);
+        	  integrator.initiateScan();
+          }
+        });
 	}
 
 	@Override
@@ -129,5 +144,23 @@ public class MenuActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		  IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+		  if (scanResult != null) {
+		    Log.i("DAV", "QR Result: "+scanResult.getContents());
+		    if(scanResult.getContents().startsWith("DAV")){
+		    	Intent routeDetailsActivity = new Intent(getApplicationContext(), RouteDetailsActivity.class);
+		        routeDetailsActivity.putExtra("routeId", Integer.parseInt(scanResult.getContents().substring(4)));
+		        Log.i("DAV", "QR Result: "+Integer.parseInt(scanResult.getContents().substring(4)));
+		        routeDetailsActivity.putExtra("userId", userId);
+		        startActivity(routeDetailsActivity);
+		    } else {
+				Toast.makeText(getApplicationContext(), "Keine Route in diesem QR-Code gefunden", Toast.LENGTH_LONG).show();
+			}
+		  } else {
+			  Toast.makeText(getApplicationContext(), "QR-Code Scann brachte kein Ergebniss", Toast.LENGTH_LONG).show();
+		  }
+		}
 
 }

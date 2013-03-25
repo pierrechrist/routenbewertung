@@ -42,5 +42,7 @@
     <string name="rateroute_categorie">Kategorie:</string>
     <string name="loginCheckBox">Logindaten speichern</string>
     <string name="loginOfflineMode">Offline Modus</string>
+    <string name="menuQRCode">QR Code Scanner</string>
+    <string name="recoverPassword_button">Passwort vergessen?</string>
 
 </resources>

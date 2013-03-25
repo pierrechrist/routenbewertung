@@ -37,7 +37,7 @@ class UserFunctions {
     }
  
     /**
-     * Benutzer durch Email und Passwort zurückgeben
+     * Benutzer durch Benutzername und Passwort zurückgeben
      */
     public function getUserByNameAndPassword($name, $password) {
         $result = mysql_query("SELECT * from rb_user WHERE user_name = '$name'") or die(mysql_error());
@@ -73,6 +73,35 @@ class UserFunctions {
         }
     }
  
+     /**
+     * Verlorenes Passwort an Email Adresse senden
+     */
+
+	public function recoverPassword($name) {
+        $result = mysql_query("SELECT * FROM rb_user WHERE user_name = '$name'") or die(mysql_error());
+        $no_of_rows = mysql_num_rows($result);
+        if ($no_of_rows > 0) {
+			$result = mysql_fetch_array($result);
+			$password = substr(md5(uniqid()), 0, 8);
+            $hash = $this->hashSSHA($password);
+			$encrypted_password = $hash["encrypted"]; // Encrypted Passwort
+			$salt = $hash["salt"]; // salt
+			mysql_query("UPDATE rb_user SET encrypted_password='$encrypted_password', salt='$salt' WHERE user_name = '$name'");
+			
+			//Password zusenden
+			$to = $result['user_email'];
+			$subject = "DAV Routenbewerter Passwort";
+			$message = "Das Passwort für ihren DAV Routenbewerter Login lautet:\n\n$password";
+			$from = "dav@soret-corp.tk";
+			$headers = "From:" . $from;
+			mail($to,$subject,$message,$headers);
+			return true;
+		} else {
+            // Benutzer existiert nicht
+            return false;
+        }
+    }
+ 
     /**
      * Passwort encrypten
      * Gibt salt und encrypted Passwort zurück
@@ -87,7 +116,7 @@ class UserFunctions {
     }
  
     /**
-     * Passwort decrypten
+     * Passwort encrypten mit vorhandenem salt Wert
      * Gibt Hash String zurück
      */
     public function checkhashSSHA($salt, $password) {
