@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="filterNumber">
+        <item></item>
+        <item>2+</item>
+        <item>3-</item>
+        <item>3</item>
+        <item>3+</item>
+        <item>4-</item>
+        <item>4</item>
+        <item>4+</item>
+        <item>5-</item>
+        <item>5</item>
+        <item>5+</item>
+        <item>6-</item>
+        <item>6</item>
+        <item>6+</item>
+        <item>7-</item>
+        <item>7</item>
+        <item>7+</item>
+        <item>8-</item>
+        <item>8</item>
+        <item>8+</item>
+        <item>9-</item>
+        <item>9</item>
+        <item>9+</item>
+        <item>10-</item>
+        <item>10</item>
+        <item>10+</item>
+        <item>11-</item>
+        <item>11</item>
+    </string-array>
+    <string-array name="filterCategorie">
+        <item></item>
+        <item>Fingerkraft</item>
+        <item>Kraft</item>
+        <item>Ausdauer</item>
+        <item>Technik</item>
+    </string-array>
+    <string-array name="filterHowClimbed">
+        <item></item>
+        <item>Flash</item>
+        <item>Rotpunkt</item>
+        <item>Projekt</item>
+    </string-array>
+    <string-array name="filterWallName">
+        <item></item>
+        <item>Hauptwand</item>
+        <item>Schulungswand</item>
+        <item>WK rechts</item>
+        <item>WK links</item>
+        <item>Ostwand</item>
+        <item>Separee</item>
+        <item>Speed</item>
+        <item>Familienausflug</item>
+        <item>Entega</item>
+        <item>Weberwändchen</item>
+    </string-array>
+</resources>

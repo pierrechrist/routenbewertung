@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +30,7 @@ public class MainActivity extends Activity {
     private DBConnector db;
     private int userId;
     private final Context context = this;
+    private SharedPreferences sp;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +44,11 @@ public class MainActivity extends Activity {
 		username = (EditText) this.findViewById(R.id.emailText);
 		password = (EditText) this.findViewById(R.id.passwordText);
 		
-		SharedPreferences sp = this.getSharedPreferences("Login", MODE_PRIVATE);
+		sp = getApplication().getSharedPreferences("Login", MODE_PRIVATE);
 		username.setText(sp.getString("Unm", null));
 		password.setText(sp.getString("Psw", null));
 		checkBox.setChecked(sp.getBoolean("Chk", false));
+		Log.i("DAV", "isPasswordResetted: "+sp.getBoolean("isPasswordResetted", false));
 		db = new DBConnector(this);
 
 		login.setOnClickListener(new OnClickListener()
@@ -133,9 +136,9 @@ public class MainActivity extends Activity {
 	            @SuppressLint("CommitPrefEdits")
 				public void onClick(DialogInterface dialog, int whichButton) {
 	            	db.recoverPassword(username.getText().toString());
-	            	SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
 		            SharedPreferences.Editor ed = sp.edit();
 		            ed.putBoolean("isPasswordResetted", true);
+		            ed.commit();	
 	              }
 	            });
 	 

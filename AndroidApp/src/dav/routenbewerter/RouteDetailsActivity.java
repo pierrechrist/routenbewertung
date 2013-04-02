@@ -30,6 +30,7 @@ public class RouteDetailsActivity extends Activity {
 	private TextView creationDate;
 	private TextView handleColor;
 	private TextView rating;
+	private TextView avarageRating;
 	private TextView categorie;
 	private TextView flash;
 	private TextView redPoint;
@@ -53,7 +54,8 @@ public class RouteDetailsActivity extends Activity {
 		routeDriver = (TextView)this.findViewById(R.id.routedetailsRoutedriver);
 		creationDate = (TextView)this.findViewById(R.id.routedetailsCreationdate);
 		handleColor = (TextView)this.findViewById(R.id.routedetailsHandlecolor);
-		rating = (TextView)this.findViewById(R.id.routedetailsAvaragerating);
+		rating = (TextView)this.findViewById(R.id.routedetailsRating);
+		avarageRating = (TextView)this.findViewById(R.id.routedetailsAvarageRating);
 		categorie = (TextView)this.findViewById(R.id.routedetailsAvaragecategorie);
 		flash = (TextView)this.findViewById(R.id.routedetailsFlashcount);
 		redPoint = (TextView)this.findViewById(R.id.routedetailsRotpunktcount);
@@ -127,7 +129,8 @@ public class RouteDetailsActivity extends Activity {
 		routeDriver.setText(r.getRouteDriver());
 		creationDate.setText(date);
 		handleColor.setText(r.getHandleColor());
-		rating.setText(r.getAverageRating());
+		rating.setText(r.getRating());
+		avarageRating.setText(r.getAverageRating());
 		categorie.setText(r.getAvarageCategorie());
 		flash.setText(flashC+"%");
 		redPoint.setText(redpointC+"%");

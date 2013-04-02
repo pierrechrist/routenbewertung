@@ -9,6 +9,7 @@ public class Route {
 	int creationDate;
 	int topRobe;
 	int boltRow;
+	String rating;
 	String averageRating;
 	String avarageCategorie;
 	Rating personalRating;
@@ -27,6 +28,7 @@ public class Route {
 		this.wallName = null;
 		this.creationDate = 0;
 		this.topRobe = 0;
+		this.rating = null;
 		this.averageRating = null;
 		this.ratingCount = 0;
 		this.avarageCategorie = null;
@@ -44,7 +46,8 @@ public class Route {
 		this.wallName = wallName;
 		this.creationDate = 0;
 		this.topRobe = 0;
-		this.averageRating = rating;
+		this.rating = rating;
+		this.averageRating = null;
 		this.ratingCount = 0;
 		this.avarageCategorie = categorie;
 		this.personalRating = null;
@@ -54,7 +57,7 @@ public class Route {
 	}
 
 	public Route(int routeNumber, String handleColor, String routeDriver,
-			String wallName, int creationDate, int topRobe, int boltRow, String averageRating, int ratingCount, String avarageCategorie, int flashCount, int redpointCount, int projectCount, int notClimbed) {
+			String wallName, int creationDate, int topRobe, int boltRow, String rating, String averageRating, int ratingCount, String avarageCategorie, int flashCount, int redpointCount, int projectCount, int notClimbed) {
 		super();
 		this.routeNumber = routeNumber;
 		this.handleColor = handleColor;
@@ -62,6 +65,7 @@ public class Route {
 		this.wallName = wallName;
 		this.creationDate = creationDate;
 		this.topRobe = topRobe;
+		this.rating = rating;
 		this.averageRating = averageRating;
 		this.ratingCount = ratingCount;
 		this.avarageCategorie = avarageCategorie;
@@ -176,6 +180,14 @@ public class Route {
 
 	public void setProjectCount(int projectCount) {
 		this.projectCount = projectCount;
+	}
+
+	public String getRating() {
+		return rating;
+	}
+
+	public void setRating(String rating) {
+		this.rating = rating;
 	}
 	
 	

@@ -1,7 +1,9 @@
 package dav.routenbewerter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -20,6 +22,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.db4o.*;
+import com.db4o.query.Query;
 
 public class DBConnector {
 	private ObjectContainer db = null;
@@ -73,8 +76,19 @@ public class DBConnector {
 				e1.printStackTrace();
 			}
 			
+			//nicht abgesendete Ratings an entfernte DB schicken
+			Query query = db.query();
+			query.constrain(Rating.class);
+			query.descend("sent").constrain(false);
+			 
+			ObjectSet<Rating> result = query.execute();
+			while(result.hasNext()) {
+				Rating r = result.next();
+				setRouteRating(r.getRating(), r.getHowClimbed(), r.getCategorie(), r.getUser().getUserId(), r.getRoute().getRouteNumber());
+				Log.i("DAV", "Offline Rating abgeschickt: "+r.getRoute().getRouteNumber());
+			}
+			
 			//start the progress dialog
-	
 			progressDialog = ProgressDialog.show(activitiy, "", "DB Sync...");
 			new Thread() {
 				@SuppressLint("SimpleDateFormat")
@@ -85,35 +99,59 @@ public class DBConnector {
 						Log.i("DAV", "routeSnyc_success: " + jObj.getString("success"));
 						Log.i("DAV", "routeSnyc_error: " + jObj.getString("error"));
 						JSONArray jArray = jObj.getJSONArray("route");
-					    for(int i=0; i < jArray.length(); i++){
+						int i;
+					    for(i=0; i < jArray.length(); i++){
 							JSONObject json_data = jArray.getJSONObject(i);
 	
 							//db4o
 							Route r = new Route(json_data.getInt("uid"));
 							ObjectSet<Route> dbresult = db.queryByExample(r);
 							
-							String avarageRating = null;
-							if(json_data.getString("avarage_rating").equals("null"))
-								avarageRating = json_data.getString("uiaa");
+							String rating = null;
+							if(json_data.getString("rating").equals("null"))
+								rating = json_data.getString("uiaa");
 							else
-								avarageRating = json_data.getString("avarage_rating");
+								rating = json_data.getString("rating");
 							
-							if(!dbresult.isEmpty()){	//Wenn es den Eintrag schon in der DB gibt wird er nur geupdated
+							r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), 
+									json_data.getString("sektor"), json_data.getInt("dateon"), json_data.getInt("tr"), json_data.getInt("boltrow"), rating, json_data.getString("avarage_rating"), json_data.getInt("rating_count"),
+									json_data.getString("avarage_categorie"), json_data.getInt("flash_count"), json_data.getInt("redpoint_count"), json_data.getInt("project_count"), json_data.getInt("not_climbed_count"));
+							
+							if(!dbresult.isEmpty()){
 								Route found = dbresult.next();
-								found.setAverageRating(avarageRating);
-								found.setAvarageCategorie(json_data.getString("avarage_categorie"));
-								found.setFlashCount(json_data.getInt("flash_count"));
-								found.setRedpointCount(json_data.getInt("redpoint_count"));
-								found.setNotClimbedCount(json_data.getInt("not_climbed_count"));
-								db.store(found);
-							}
-							else {	//Ansonsten wird ein neuer Eintrag angelegt
-								r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), 
-										json_data.getString("sektor"), json_data.getInt("dateon"), json_data.getInt("tr"), json_data.getInt("boltrow"), avarageRating, json_data.getInt("rating_count"),
-										json_data.getString("avarage_categorie"), json_data.getInt("flash_count"), json_data.getInt("redpoint_count"), json_data.getInt("project_count"), json_data.getInt("not_climbed_count"));
+								if(!found.equals(r)) {
+									found.setRating(rating);
+									found.setAverageRating(json_data.getString("avarage_rating"));
+									found.setAvarageCategorie(json_data.getString("avarage_categorie"));
+									found.setFlashCount(json_data.getInt("flash_count"));
+									found.setRedpointCount(json_data.getInt("redpoint_count"));
+									found.setNotClimbedCount(json_data.getInt("not_climbed_count"));
+									db.store(found);
+								}
+							} else {
 								db.store(r);
 							}
+
 						}
+					    ObjectSet<Route> r = getRoutes();
+					    if(r.size() != i) {
+					    	Log.i("DAV", "Mehr Routen in lokaler DB als in entfernter DB");
+					    	while(r.hasNext()) {
+					    		Boolean found = false;
+					    		Route route = r.next();
+					    		for(i=0; i < jArray.length(); i++){
+									JSONObject json_data = jArray.getJSONObject(i);
+									if(route.getRouteNumber() == json_data.getInt("uid"))
+										found = true;
+					    		}
+					    		if(!found) {
+					    			Rating rating = getRating(new Rating(route, null));
+					    			db.delete(rating);
+					    			db.delete(route);
+					    			Log.i("DAV", "Route gelöscht: "+route.getRouteNumber());
+					    		}
+					    	}
+					    }
 					} catch (JSONException e){
 						Log.e("log_tag", "Error parsing data "+e.toString());
 					}
@@ -154,6 +192,7 @@ public class DBConnector {
 			}
 	
 			}.start();
+			
 		}
 	}
 	
@@ -202,6 +241,34 @@ public class DBConnector {
 			rating = result.next();
 		}
 		return rating;
+	}
+	
+	public List<Route> getOldestRoutes() {
+		 Query query =  db.query();
+		 query.constrain(Route.class);
+		 query.descend("creationDate").orderAscending();
+		 
+		 ObjectSet<Route> result = query.execute();
+		 List<Route> list = null;
+		 list = new ArrayList<Route>();
+		 for(int i=0; i<10; i++){
+		   	list.add(result.next());
+		 }
+		 return list;
+	}
+	
+	public List<Route> getNewsestRoutes() {
+		 Query query =  db.query();
+		 query.constrain(Route.class);
+		 query.descend("creationDate").orderDescending();
+		 
+		 ObjectSet<Route> result = query.execute();
+		 List<Route> list = null;
+		 list = new ArrayList<Route>();
+		 for(int i=0; i<10; i++){
+		   	list.add(result.next());
+		 }
+		 return list;
 	}
 	
 	public int registerUser(String eMail, String userName, String password) {
@@ -346,6 +413,7 @@ public class DBConnector {
 					Route r = this.getRoute(new Route(routeId));
 					Rating a = new Rating(rating, howClimbed, categorie, date, this.getUser(new User(userId)), r, true);	//Rating zum Speichern in die Datenbank anlegen
 					db.store(a);	//Rating in der lokalen DB speichern
+					r.setAverageRating(this.getAvarageRouteRating(r, rating));
 					if(howClimbed.equals("Flash")) {
 						r.setFlashCount(r.getFlashCount()+1);
 					} else if(howClimbed.equals("Rotpunkt")) {
@@ -354,6 +422,7 @@ public class DBConnector {
 						r.setProjectCount(r.getProjectCount()+1);
 					}
 					r.setNotClimbedCount(r.getNotClimbedCount()-1);
+					r.setRatingCount(r.getRatingCount()+1);
 					db.store(r);
 				} else {
 					Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
@@ -450,5 +519,90 @@ public class DBConnector {
 			Toast.makeText(activitiy, "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
 		}
 		return success;
+	}
+	
+	public Boolean setUserPassword(String userName, String password) {
+		Boolean success = false;
+		if(isOnline()) {
+			BasicNameValuePair tag = new BasicNameValuePair("tag","setuserpassword");
+			BasicNameValuePair userNamePair = new BasicNameValuePair("name",userName);
+			BasicNameValuePair userPasswordPair = new BasicNameValuePair("password",password);
+			
+			 String result = "";
+				try {
+					AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, userNamePair, userPasswordPair);
+					result = (String)parser.get();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ExecutionException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				// try parse the string to a JSON object
+				JSONObject jObj = null;
+				try {
+					jObj = new JSONObject(result);
+					if(jObj.getString("success").equals("1")){
+						success = true;
+						Toast.makeText(activitiy, "Neues Passwort wurde gesetzt", Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
+					}
+		        } catch (JSONException e) {
+		            Log.e("JSON Parser", "Error parsing data " + e.toString());
+		        }
+		} else {
+			Toast.makeText(activitiy, "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
+		}
+		return success;
+	}
+	
+	private String getAvarageRouteRating(Route route, String rating) {
+		List<Float> ratingList = new ArrayList<Float>();
+		float ratingNumber = 0;
+		float avarageRating = 0;
+		String ratingAdd = null;
+		for(int i=0; i<=1; i++){
+			if(rating.length() == 2) {
+				ratingNumber = Integer.parseInt(rating.substring(0, 1)); 
+				ratingAdd = rating.substring(1, 2);
+				if(ratingAdd.equals("+"))
+					ratingNumber+=0.3;
+				else
+					ratingNumber-=0.3;
+			} else if(rating.length() == 3) {
+				ratingNumber = Integer.parseInt(rating.substring(0, 2)); 
+				ratingAdd = rating.substring(3, 4);
+				if(ratingAdd.equals("+"))
+					ratingNumber+=0.3;
+				else
+					ratingNumber-=0.3;
+			} else {
+				ratingNumber = Integer.parseInt(rating);
+			}
+			rating = route.getAverageRating();
+			ratingList.add(ratingNumber);
+		}
+		Log.i("DAV", "Rating1: "+ratingList.get(0)+" Rating2: "+ratingList.get(1)+" RatingCount: "+route.getRatingCount());
+		int ratingCount = route.getRatingCount()+1;
+		avarageRating = (ratingList.get(0) + (ratingList.get(1)*ratingCount))/(ratingCount+1);
+		Log.i("DAV", "avarageRating: "+avarageRating);
+		float y=avarageRating-(int)avarageRating;
+		String newAvarageRating = null;
+		if((y>0)&&(y<=0.15))
+			newAvarageRating=(int)(avarageRating-y)+"";
+		else if((y>0.15)&&(y<=0.3))
+			newAvarageRating=(int)(avarageRating-y)+"+";
+		else if((y>0.3)&&(y<=0.5))
+			newAvarageRating=(int)(avarageRating-y)+"+";
+		else if((y>0.5)&&(y<=0.7))
+			newAvarageRating=(int)(avarageRating-y+1)+"-";
+		else if((y>0.7)&&(y<=0.85))
+			newAvarageRating=(int)(avarageRating-y+1)+"-";
+		else if((y>0.85)&&(y<=1))
+			newAvarageRating=(int)(avarageRating-y+1)+"";
+		
+		return newAvarageRating;
 	}
 }

@@ -31,7 +31,8 @@
     <string name="routedetails_handlecolor">Grifffarbe:</string>
     <string name="routedetails_routedriver">Routenschrauber:</string>
     <string name="routedetails_creationdate">Erstelldatum:</string>
-    <string name="routedetails_avaragerating">Schwierigkeitsgrad:</string>
+    <string name="routedetails_rating">Schwierigkeitsgrad:</string>
+    <string name="routedetails_avaragerating">User Schwierigkeitsgrad:</string>
     <string name="routedetails_avaragecategorie">Kategorie:</string>
     <string name="routedetails_ownRating">Eigene Bewertung:</string>
     <string name="routedetails_ownCategorie">Eigene Categorie:</string>
@@ -44,5 +45,9 @@
     <string name="loginOfflineMode">Offline Modus</string>
     <string name="menuQRCode">QR Code Scanner</string>
     <string name="recoverPassword_button">Passwort vergessen?</string>
+    <string name="menuNoFilter">Kein Routen Filter</string>
+    <string name="menuRouteFilter">Routen Filter</string>
+    <string name="menuOldestRoutefilter">10 Ältesten Routen</string>
+    <string name="menuNewestRoutefilter">10 Neusten Routen</string>
 
 </resources>

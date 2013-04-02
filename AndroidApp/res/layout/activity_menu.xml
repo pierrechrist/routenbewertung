@@ -1,121 +1,168 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent" 
+    xmlns:tools="http://schemas.android.com/tools">
+    
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" 
-    android:gravity="center"
-    android:orientation="vertical" >
+    tools:context=".MainActivity" >
 
-        <TextView
-            android:id="@+id/routedetailsTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menu_title"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TextView
+        android:id="@+id/routedetailsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_title"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical" >
-
-            <CheckBox
-                android:id="@+id/filterWallNameLable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/routedetails_wallname" />
-
-            <EditText
-                android:id="@+id/filterWallName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10" android:inputType="text">
-
-                <requestFocus />
-            </EditText>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical" >
-
-            <CheckBox
-                android:id="@+id/filterRatingLable"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/rateroute_rating" />
-
-            <Spinner
-                android:id="@+id/filterRating"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical" >
-
-            <CheckBox
-                android:id="@+id/filterCategorieLable"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/rateroute_categorie" />
-
-            <Spinner
-                android:id="@+id/filterCategorie"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical" >
-
-            <CheckBox
-                android:id="@+id/filterHowClimbedLable"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/rateroute_climbed" />
-
-            <Spinner
-                android:id="@+id/filterHowClimbed"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/menuRoutesButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/routes_button" />
-
-        <Button
-            android:id="@+id/menuPersonalButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/personal_button" />
-
-        <Button
-            android:id="@+id/menuQRCodeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/menuQRCode" />
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/border"
+        android:orientation="vertical"
+        android:padding="10dp" >
+    
+	    <RadioGroup
+	        android:id="@+id/menuRadioGroup"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+	
+	        <RadioButton
+	            android:id="@+id/menuNoFilter"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/menuNoFilter" />
+	
+	        <RadioButton
+	            android:id="@+id/menuRouteFilter"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/menuRouteFilter" />
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center_vertical" >
+	
+	            <TextView
+	                android:id="@+id/filterWallNameLable"
+	                android:layout_width="0dp"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:text="@string/routedetails_wallname"
+	                android:visibility="gone" />
+	
+	            <Spinner
+	                android:id="@+id/filterWallName"
+	                android:layout_width="0dp"
+	                android:layout_height="50dp"
+	                android:layout_weight="1"
+	                android:visibility="gone" />
+	        </LinearLayout>
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center_vertical" >
+	
+	            <TextView
+	                android:id="@+id/filterRatingLable"
+	                android:layout_width="0dp"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:text="@string/rateroute_rating"
+	                android:visibility="gone" />
+	
+	            <Spinner
+	                android:id="@+id/filterRating"
+	                android:layout_width="0dp"
+	                android:layout_height="50dp"
+	                android:layout_weight="1"
+	                android:visibility="gone" />
+	        </LinearLayout>
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center_vertical" >
+	
+	            <TextView
+	                android:id="@+id/filterCategorieLable"
+	                android:layout_width="0dp"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:text="@string/rateroute_categorie"
+	                android:visibility="gone" />
+	
+	            <Spinner
+	                android:id="@+id/filterCategorie"
+	                android:layout_width="0dp"
+	                android:layout_height="50dp"
+	                android:layout_weight="1"
+	                android:visibility="gone" />
+	        </LinearLayout>
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:gravity="center_vertical" >
+	
+	            <TextView
+	                android:id="@+id/filterHowClimbedLable"
+	                android:layout_width="0dp"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="1"
+	                android:text="@string/rateroute_climbed"
+	                android:visibility="gone" />
+	
+	            <Spinner
+	                android:id="@+id/filterHowClimbed"
+	                android:layout_width="0dp"
+	                android:layout_height="50dp"
+	                android:layout_weight="1"
+	                android:visibility="gone" />
+	        </LinearLayout>
+	
+	        <RadioButton
+	            android:id="@+id/menuNewestRouteFilter"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/menuNewestRoutefilter" />
+	
+	        <RadioButton
+	            android:id="@+id/menuOldestRouteFilter"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/menuOldestRoutefilter" />
+	    </RadioGroup>
+	
+	    <Button
+	        android:id="@+id/menuRoutesButton"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/routes_button" />
+	    
     </LinearLayout>
+
+    <Button
+        android:id="@+id/menuPersonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/personal_button" />
+
+    <Button
+        android:id="@+id/menuQRCodeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/menuQRCode" />
+
+</LinearLayout>
+</ScrollView>

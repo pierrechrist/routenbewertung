@@ -23,6 +23,8 @@ public class RoutesListActivity extends ListActivity {
 	private String wallName;
 	private String categorie;
 	private String howClimbed;
+	private Boolean isOldestRoutes;
+	private Boolean isNewestRoutes;
 	private List<Route> result = null;
 	
 	@Override
@@ -36,6 +38,8 @@ public class RoutesListActivity extends ListActivity {
 		wallName = i.getStringExtra("wallName");
 		categorie = i.getStringExtra("categorie");
 		howClimbed = i.getStringExtra("howClimbed");
+		isNewestRoutes = i.getBooleanExtra("newestRoutes", false);
+		isOldestRoutes = i.getBooleanExtra("oldestRoutes", false);
 		
 		result = new ArrayList<Route>();
 		
@@ -81,8 +85,35 @@ public class RoutesListActivity extends ListActivity {
 			Rating r = null;
 			while(ratings.hasNext()) {
 				r = ratings.next();
-				result.add(r.getRoute());
+				Route route = r.getRoute();
+				Boolean isCategorie = false;
+				Boolean isRating = false;
+				Boolean isWallName = false;
+				if(categorie != null && route.getAvarageCategorie().equals(categorie)) {
+					isCategorie = true;
+				} else if(categorie == null) {
+					isCategorie = true;
+				}
+				if(rating != null && route.getRating().equals(rating)) {
+					isRating = true;
+				} else if(rating == null) {
+					isRating = true;
+				}
+				if(wallName != null && route.getWallName().equals(wallName)) {
+					isWallName = true;
+				} else if(wallName == null) {
+					isWallName = true;
+				}
+				
+				
+				if(isCategorie && isRating && isWallName)
+					result.add(route);
 			}
+		} else if(isNewestRoutes) {
+			result = db.getNewsestRoutes();
+
+		} else if(isOldestRoutes) {
+			result = db.getOldestRoutes();
 		} else {
 			result = db.getRoutes(new Route(wallName, rating, categorie));
 		}

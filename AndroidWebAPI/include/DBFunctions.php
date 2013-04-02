@@ -57,7 +57,7 @@ class DBFunctions {
 			(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Rotpunkt' AND route_id = r.uid) as redpoint_count,
 			(SELECT COUNT(*) FROM rb_ratings WHERE howclimbed = 'Projekt' AND route_id = r.uid) as project_count,
 			(SELECT COUNT(*)-rating_count FROM rb_user) as not_climbed_count,
-			(SELECT u.uiaa FROM rb_route_details LEFT JOIN tx_dihlroutes_uiaa u ON avarage_rating = u.uid  WHERE route_id = r.uid) as avarage_rating,
+			(SELECT u.uiaa FROM rb_route_details LEFT JOIN tx_dihlroutes_uiaa u ON avarage_rating = u.uid  WHERE route_id = r.uid) as rating,
 			(SELECT avarage_categorie FROM rb_route_details WHERE route_id = r.uid) as avarage_categorie
 			FROM tx_dihlroutes_routelist r 
 			LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid 
@@ -71,6 +71,24 @@ class DBFunctions {
             return false;
         }
     }
+	
+	/**
+     * Das durschnitts Rating der User berechnen
+     */
+    public function getAvarageRouteRating($routeId) {
+		$routerating = mysql_query("SELECT u.uiaa FROM tx_dihlroutes_routelist r LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid WHERE r.uid = $routeId");
+		$result = mysql_query("SELECT u.uiaa FROM rb_ratings r LEFT JOIN tx_dihlroutes_uiaa u ON r.rating = u.uid WHERE r.route_id = $routeId");
+		$ratingArray = array();
+		while($rating=mysql_fetch_assoc($result)) {
+			array_push($ratingArray, $this->ratingStringToInt($rating));			
+		}
+		array_push($ratingArray, $this->ratingStringToInt(mysql_fetch_assoc($routerating)));
+		foreach($ratingArray as $val) {
+			$avarageRating+=$val;
+		}
+		$avarageRating = $avarageRating/count($ratingArray);
+		return $this->roundRating($avarageRating);
+	}
 	
 	/**
      * UiaaId auslesen
@@ -87,7 +105,52 @@ class DBFunctions {
             return false;
         }
     }
+	
+	/**
+    * Rundet das AvarageRating
+	* Gibt wieder einen Uiaa String zurück (Bsp. 2.4 wird zu 2+)
+    */
+	public function roundRating($x) {
+		$y=$x-floor($x);
+		if(($y>0)&&($y<=0.15))
+			$x=$x-$y;
+		else if(($y>0.15)&&($y<=0.3))
+			$x=($x-$y)."+";
+		else if(($y>0.3)&&($y<=0.5))
+			$x=($x-$y)."+";
+		else if(($y>0.5)&&($y<=0.7))
+			$x=($x-$y+1)."-";
+		else if(($y>0.7)&&($y<=0.85))
+			$x=($x-$y+1)."-";
+		else if(($y>0.85)&&($y<=1))
+			$x=$x-$y+1;
+		return $x;
+	}
  
+ 	/**
+    * Wandelt den Rating String in einen Int um
+	* Gibt ein Int Rating zurück (Bsp. 2+ wird zu 2.3)
+    */
+	public function ratingStringToInt($rating) {
+		if(strlen($rating["uiaa"]) == 2) {
+			$number = substr($rating["uiaa"], 0, 1); 
+			$add = substr($rating["uiaa"], 1, 1);
+			if($add == "+")
+				$number+=0.3;
+			else
+				$number-=0.3;
+		} else if(strlen($rating["uiaa"]) == 3) {
+			$number = substr($rating["uiaa"], 0, 2); 
+			$add = substr($rating["uiaa"], 2, 1);
+			if($add == "+")
+				$number+=0.3;
+			else
+				$number-=0.3;
+		} else {
+			$number = $rating["uiaa"];
+		}
+		return $number;
+	}
 }
  
 ?>

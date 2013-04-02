@@ -6,16 +6,21 @@ import com.google.zxing.integration.android.IntentResult;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MenuActivity extends Activity {
@@ -24,16 +29,18 @@ public class MenuActivity extends Activity {
 	private Button personalStats;
 	private Button qrCodeScanner;
 	private Spinner rating;
-	private CheckBox ratingLable;
+	private TextView ratingLable;
 	private Spinner categorie;
-	private CheckBox categorieLable;
+	private TextView categorieLable;
 	private Spinner howClimbed;
-	private CheckBox howClimbedLable;
-	private EditText wallName;
-	private CheckBox wallNameLable;
+	private TextView howClimbedLable;
+	private Spinner wallName;
+	private TextView wallNameLable;
+	private RadioGroup radioGroup;
 	private DBConnector db;
 	private int userId;
 	private Activity activity;
+	private SharedPreferences sp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,32 +48,40 @@ public class MenuActivity extends Activity {
 		setContentView(R.layout.activity_menu);
 		activity = this;
 		
+		sp = getApplication().getSharedPreferences("Login", MODE_PRIVATE);
+		
 		routeList = (Button) this.findViewById(R.id.menuRoutesButton);
 		personalStats = (Button) this.findViewById(R.id.menuPersonalButton);
 		
-		wallName = (EditText) findViewById(R.id.filterWallName);
+		wallName = (Spinner) findViewById(R.id.filterWallName);
 		rating = (Spinner) findViewById(R.id.filterRating);
 		categorie = (Spinner) findViewById(R.id.filterCategorie);
 		howClimbed = (Spinner) findViewById(R.id.filterHowClimbed);
-		wallNameLable = (CheckBox) findViewById(R.id.filterWallNameLable);
-		ratingLable = (CheckBox) findViewById(R.id.filterRatingLable);
-		categorieLable = (CheckBox) findViewById(R.id.filterCategorieLable);
-		howClimbedLable = (CheckBox) findViewById(R.id.filterHowClimbedLable);
+		wallNameLable = (TextView) findViewById(R.id.filterWallNameLable);
+		ratingLable = (TextView) findViewById(R.id.filterRatingLable);
+		categorieLable = (TextView) findViewById(R.id.filterCategorieLable);
+		howClimbedLable = (TextView) findViewById(R.id.filterHowClimbedLable);
 		qrCodeScanner = (Button) findViewById(R.id.menuQRCodeButton);
+		radioGroup = (RadioGroup) findViewById(R.id.menuRadioGroup);
 
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.ratingNumber, android.R.layout.simple_spinner_item);
+		radioGroup.check(R.id.menuNoFilter);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.filterNumber, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		rating.setAdapter(adapter);
-		adapter = ArrayAdapter.createFromResource(this, R.array.categorie, android.R.layout.simple_spinner_item);
+		adapter = ArrayAdapter.createFromResource(this, R.array.filterCategorie, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		categorie.setAdapter(adapter);
-		adapter = ArrayAdapter.createFromResource(this, R.array.howClimbed, android.R.layout.simple_spinner_item);
+		adapter = ArrayAdapter.createFromResource(this, R.array.filterHowClimbed, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		howClimbed.setAdapter(adapter);
+		adapter = ArrayAdapter.createFromResource(this, R.array.filterWallName, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		wallName.setAdapter(adapter);
 		
 		Intent i = getIntent();
         // Receiving the Data
 		userId = i.getIntExtra("userId", 0);
+		
 		
 		db = new DBConnector(this);
 		db.openDB();
@@ -75,11 +90,16 @@ public class MenuActivity extends Activity {
 		User uResult = db.getUser(u);
 		
 		if(!i.getBooleanExtra("offline", false)){
-			//db.syncDB(userId);
+			db.syncDB(userId);
 			Toast.makeText(getApplicationContext(), "UserId: "+uResult.getUserId()+" UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
 		} else {
 			Toast.makeText(getApplicationContext(), "Offline Modus, UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
 		}  
+		
+		if(sp.getBoolean("isPasswordResetted", false)) {
+		Log.i("DAV", "isPasswordResetted: "+sp.getBoolean("isPasswordResetted", false));
+			this.setUserPasswordDialog(uResult.getUserName());
+		}
 		
 		routeList.setOnClickListener(new OnClickListener()
 	        {
@@ -87,14 +107,20 @@ public class MenuActivity extends Activity {
 	          {
 	              Intent routesListActivity = new Intent(getApplicationContext(), RoutesListActivity.class);
 	              routesListActivity.putExtra("userId", userId);
-	              if(wallNameLable.isChecked())
-	            	  routesListActivity.putExtra("wallName", wallName.getText().toString());
-	              if(ratingLable.isChecked())
-	            	  routesListActivity.putExtra("rating", rating.getSelectedItem().toString());
-	              if(categorieLable.isChecked())
-	            	  routesListActivity.putExtra("categorie", categorie.getSelectedItem().toString());
-	              if(howClimbedLable.isChecked())
-	            	  routesListActivity.putExtra("howClimbed", howClimbed.getSelectedItem().toString());
+	              if(radioGroup.getCheckedRadioButtonId() == R.id.menuRouteFilter) {
+		              if(!wallName.getSelectedItem().toString().equals(""))
+		            	  routesListActivity.putExtra("wallName", wallName.getSelectedItem().toString());
+		              if(!rating.getSelectedItem().toString().equals(""))
+		            	  routesListActivity.putExtra("rating", rating.getSelectedItem().toString());
+		              if(!categorie.getSelectedItem().toString().equals(""))
+		            	  routesListActivity.putExtra("categorie", categorie.getSelectedItem().toString());
+		              if(!howClimbed.getSelectedItem().toString().equals(""))
+		            	  routesListActivity.putExtra("howClimbed", howClimbed.getSelectedItem().toString());
+	              } else if(radioGroup.getCheckedRadioButtonId() == R.id.menuNewestRouteFilter) {
+	            	  routesListActivity.putExtra("newestRoutes", true);
+	              } else if(radioGroup.getCheckedRadioButtonId() == R.id.menuOldestRouteFilter) {
+	            	  routesListActivity.putExtra("oldestRoutes", true);
+	              }
 	              
 	              startActivity(routesListActivity);
 	          }
@@ -118,6 +144,32 @@ public class MenuActivity extends Activity {
         	  IntentIntegrator integrator = new IntentIntegrator(activity);
         	  integrator.initiateScan();
           }
+        });
+		
+		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup rg, int checkedId) {
+            	Log.i("DAV", "Radio Checked: "+checkedId);
+                if(checkedId == R.id.menuRouteFilter) {
+                	rating.setVisibility(View.VISIBLE);
+                	ratingLable.setVisibility(View.VISIBLE);
+                	categorie.setVisibility(View.VISIBLE);
+                	categorieLable.setVisibility(View.VISIBLE);
+                	howClimbed.setVisibility(View.VISIBLE);
+                	howClimbedLable.setVisibility(View.VISIBLE);
+                	wallName.setVisibility(View.VISIBLE);
+                	wallNameLable.setVisibility(View.VISIBLE);
+                } else {
+                	rating.setVisibility(View.GONE);
+                	ratingLable.setVisibility(View.GONE);
+                	categorie.setVisibility(View.GONE);
+                	categorieLable.setVisibility(View.GONE);
+                	howClimbed.setVisibility(View.GONE);
+                	howClimbedLable.setVisibility(View.GONE);
+                	wallName.setVisibility(View.GONE);
+                	wallNameLable.setVisibility(View.GONE);
+                }
+                	
+            }
         });
 	}
 
@@ -161,6 +213,35 @@ public class MenuActivity extends Activity {
 		  } else {
 			  Toast.makeText(getApplicationContext(), "QR-Code Scann brachte kein Ergebniss", Toast.LENGTH_LONG).show();
 		  }
-		}
+	}
+	
+	private void setUserPasswordDialog(final String userName) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle("Passwort zurückgesetzt");
+		alert.setMessage("Bitte geben sie ein neues Passwort ein:");
+
+		// Set an EditText view to get user input
+		final EditText input = new EditText(this);
+		alert.setView(input);
+
+		alert.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				db.setUserPassword(userName, input.getText().toString());
+				SharedPreferences.Editor ed = sp.edit();
+				ed.putBoolean("isPasswordResetted", false);
+				ed.commit();
+			}
+		});
+
+		alert.setNegativeButton("Abbrechen",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						return;
+					}
+				});
+
+		alert.show();
+	}
 
 }

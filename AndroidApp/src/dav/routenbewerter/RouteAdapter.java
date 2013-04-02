@@ -61,7 +61,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
             number.setText(Integer.toString(currentRoute.getBoltRow()));
             number.setCompoundDrawables(myIcon, null, null, null);
             TextView rating = (TextView)currentView.findViewById(R.id.listRouteRating);
-            rating.setText(currentRoute.getAverageRating());
+            rating.setText(currentRoute.getRating());
             TextView wall = (TextView)currentView.findViewById(R.id.listRouteWallName);
             wall.setText(currentRoute.getWallName());
             ImageView start = (ImageView)currentView.findViewById(R.id.listAmpelImage);

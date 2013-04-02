@@ -117,23 +117,24 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/routedetailsAvarageratingLable"
+            android:id="@+id/routedetailsRatingLable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/routedetails_avaragerating"
+            android:text="@string/routedetails_rating"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/routedetailsAvaragerating"
+            android:id="@+id/routedetailsRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10pt" >
 
         <TextView
             android:id="@+id/routedetailsAvaragecategorieLable"
@@ -149,11 +150,30 @@
             android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
+    
+        <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/routedetailsAvarageRatingLable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/routedetails_avaragerating"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/routedetailsAvarageRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
+    
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10pt" >
+        android:layout_height="wrap_content" >
 
         <TextView
             android:id="@+id/routedetailsFlashcountLable"

@@ -76,7 +76,6 @@ class UserFunctions {
      /**
      * Verlorenes Passwort an Email Adresse senden
      */
-
 	public function recoverPassword($name) {
         $result = mysql_query("SELECT * FROM rb_user WHERE user_name = '$name'") or die(mysql_error());
         $no_of_rows = mysql_num_rows($result);
@@ -100,6 +99,17 @@ class UserFunctions {
             // Benutzer existiert nicht
             return false;
         }
+    }
+	
+     /**
+     * Neues Passwort setzten
+     */
+	public function setPassword($name, $password) {
+		$hash = $this->hashSSHA($password);
+		$encrypted_password = $hash["encrypted"]; // Encrypted Passwort
+		$salt = $hash["salt"]; // salt
+		mysql_query("UPDATE rb_user SET encrypted_password='$encrypted_password', salt='$salt' WHERE user_name = '$name'");
+		return true;
     }
  
     /**
