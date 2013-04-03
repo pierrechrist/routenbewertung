@@ -13,14 +13,19 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.dav.routenbewerter.R;
 import com.db4o.*;
 import com.db4o.query.Query;
 
@@ -34,6 +39,7 @@ public class DBConnector {
 	private DBConnector dbC = null;
 	private NetworkInfo ni = null;
 	ConnectivityManager cm = null;
+	private Boolean dbOpen = false;
 
 	public DBConnector(Activity a) {
 		this.activitiy = a;
@@ -45,12 +51,18 @@ public class DBConnector {
 	@SuppressWarnings("deprecation")
 	public void openDB() {	//Öffnet die lokale DB
 		db = Db4o.openFile(this.activitiy.getDir("davRB", Context.MODE_PRIVATE) + "/dav_rb.db");
+		dbOpen = true;
 	}
 	
 	public void closeDB() {	//Schließt die lokale DB
 		db.close();
+		dbOpen = false;
 	}
 	
+	public Boolean isDbOpen() {
+		return dbOpen;
+	}
+
 	public Boolean isOnline() {
 		if(ni != null && ni.isConnected()) {
 			return true;
@@ -59,7 +71,7 @@ public class DBConnector {
 		}
 	}
 	
-	public void syncDB(int userId) {	//Startet ein AsyncTask um die lokale DB mit der entfernten DB zu synchronisieren
+	public void syncDB(final int userId) {	//Startet ein AsyncTask um die lokale DB mit der entfernten DB zu synchronisieren
 		if(isOnline()) { 
 			BasicNameValuePair getRoutesPair = new BasicNameValuePair("tag","getroutes");
 			BasicNameValuePair getRatingsPair = new BasicNameValuePair("tag","getratings");
@@ -86,6 +98,8 @@ public class DBConnector {
 				Rating r = result.next();
 				setRouteRating(r.getRating(), r.getHowClimbed(), r.getCategorie(), r.getUser().getUserId(), r.getRoute().getRouteNumber());
 				Log.i("DAV", "Offline Rating abgeschickt: "+r.getRoute().getRouteNumber());
+				r.setSent(true);
+				db.store(r);
 			}
 			
 			//start the progress dialog
@@ -130,6 +144,7 @@ public class DBConnector {
 								}
 							} else {
 								db.store(r);
+								createNotification(userId, r.getRouteNumber());
 							}
 
 						}
@@ -146,8 +161,9 @@ public class DBConnector {
 					    		}
 					    		if(!found) {
 					    			Rating rating = getRating(new Rating(route, null));
-					    			db.delete(rating);
 					    			db.delete(route);
+					    			if(rating != null)
+					    				db.delete(rating);
 					    			Log.i("DAV", "Route gelöscht: "+route.getRouteNumber());
 					    		}
 					    	}
@@ -178,9 +194,14 @@ public class DBConnector {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								a = new Rating(json_data.getString("uiaa"), json_data.getString("howclimbed"), json_data.getString("categorie"),
-										date, dbC.getUser(new User(json_data.getInt("user_id"))), dbC.getRoute(new Route(json_data.getInt("route_id"))), true);
-								db.store(a);
+								Route route = dbC.getRoute(new Route(json_data.getInt("route_id")));
+								if(route != null) {
+									a = new Rating(json_data.getString("uiaa"), json_data.getString("howclimbed"), json_data.getString("categorie"),
+											date, dbC.getUser(new User(json_data.getInt("user_id"))), route, true);
+									route.setPersonalRating(a);
+									db.store(a);
+									db.store(route);
+								}
 							}
 						}
 					} catch (JSONException e){
@@ -423,6 +444,7 @@ public class DBConnector {
 					}
 					r.setNotClimbedCount(r.getNotClimbedCount()-1);
 					r.setRatingCount(r.getRatingCount()+1);
+					r.setPersonalRating(a);
 					db.store(r);
 				} else {
 					Toast.makeText(activitiy, jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
@@ -443,6 +465,7 @@ public class DBConnector {
 				r.setProjectCount(r.getProjectCount()+1);
 			}
 			r.setNotClimbedCount(r.getNotClimbedCount()-1);
+			r.setPersonalRating(a);
 			db.store(r);
 		}
 		
@@ -604,5 +627,25 @@ public class DBConnector {
 			newAvarageRating=(int)(avarageRating-y+1)+"";
 		
 		return newAvarageRating;
+	}
+	
+	@SuppressWarnings("static-access")
+	private void createNotification(int userId, int routeId) {
+		NotificationCompat.Builder builder =  
+	            new NotificationCompat.Builder(activitiy)  
+	            .setSmallIcon(R.drawable.ic_launcher)  
+	            .setContentTitle("Neue Route")  
+	            .setContentText("Es wurde eine neue Route hinzugefügt. Klicken um die Route anzuzeigen.");  
+
+	    Intent notificationIntent = new Intent(activitiy, RouteDetailsActivity.class);  
+	    notificationIntent.putExtra("routeId", routeId);
+	    notificationIntent.putExtra("userId", userId);
+	    PendingIntent contentIntent = PendingIntent.getActivity(activitiy, 0, notificationIntent,   
+	            PendingIntent.FLAG_UPDATE_CURRENT);  
+	    builder.setContentIntent(contentIntent);  
+
+	    // Add as notification 
+	    NotificationManager manager = (NotificationManager) activitiy.getSystemService(activitiy.NOTIFICATION_SERVICE);  
+	    manager.notify(100, builder.build());  
 	}
 }

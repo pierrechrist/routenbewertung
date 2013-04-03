@@ -49,5 +49,6 @@
     <string name="menuRouteFilter">Routen Filter</string>
     <string name="menuOldestRoutefilter">10 Ältesten Routen</string>
     <string name="menuNewestRoutefilter">10 Neusten Routen</string>
+    <string name="mDbSync">DB Sync</string>
 
 </resources>

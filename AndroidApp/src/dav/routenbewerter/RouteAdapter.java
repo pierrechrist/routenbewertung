@@ -15,20 +15,14 @@ import android.widget.TextView;
 
 public class RouteAdapter extends ArrayAdapter<Route> {
 	private List<Route> route;
-	//private DBConnector db;
 	private int textViewResourceId;
 	private Context context;
-	//private int userId;
-	private List<Rating> rating;
 	
 	public RouteAdapter(Context context, int textViewResourceId, List<Route> route, List<Rating> rating) {
 		super(context, textViewResourceId);
 		this.route = route;
-		//this.db = db;
 		this.textViewResourceId = textViewResourceId;
         this.context = context;
-        //this.userId = userId;
-        this.rating = rating;
 	}
 	
     @Override
@@ -45,7 +39,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
          
             Route currentRoute = route.get(position);
             
-            String icon = currentRoute.getHandleColor().replaceAll(" ", "_").replaceAll("ü", "ue");
+            String icon = currentRoute.getHandleColor().replaceAll(" ", "_").replaceAll("ü", "ue").replaceAll("ß", "ss");
             int resID = parent.getResources().getIdentifier(icon, "drawable",  ((Activity)context).getPackageName()); 
             
             Drawable myIcon = null;
@@ -66,18 +60,14 @@ public class RouteAdapter extends ArrayAdapter<Route> {
             wall.setText(currentRoute.getWallName());
             ImageView start = (ImageView)currentView.findViewById(R.id.listAmpelImage);
 
-            //Rating r = db.getRating(new Rating(currentRoute, new User(userId)));
-            
-            for(int i = 0; i < this.rating.size(); i++){
-            	if(this.rating.get(i).getRoute().getRouteNumber() == currentRoute.getRouteNumber()) {
-		            if(this.rating.get(i).getHowClimbed().equals("Flash"))
-		            	start.setImageResource(R.drawable.traffic_lights_green);
-		            else if(this.rating.get(i).getHowClimbed().equals("Rotpunkt") || this.rating.get(i).getHowClimbed().equals("Projekt"))
-		            	start.setImageResource(R.drawable.traffic_lights_yellow);
-		            else
-		            	start.setImageResource(R.drawable.traffic_lights_red);
-            	}
-            }
+            if(currentRoute.getPersonalRating() != null) {
+	            if(currentRoute.getPersonalRating().getHowClimbed().equals("Flash"))
+	            	start.setImageResource(R.drawable.traffic_lights_green);
+	            else if(currentRoute.getPersonalRating().getHowClimbed().equals("Rotpunkt") || currentRoute.getPersonalRating().getHowClimbed().equals("Projekt"))
+	            	start.setImageResource(R.drawable.traffic_lights_yellow);
+            } else
+            	start.setImageResource(R.drawable.traffic_lights_red);
+
             return currentView;
     }
 

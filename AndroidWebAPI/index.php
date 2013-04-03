@@ -121,6 +121,7 @@ if (isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
 			// Jede Route in den JSON Response schreiben
 			while($route=mysql_fetch_assoc($routes)) {
 				$route["avarage_rating"]=$dbF->getAvarageRouteRating($route["uid"]);
+				$route["color"]=utf8_encode($route["color"]);
 				$response["route"][]=$route;
 			}				
 			echo json_encode($response);

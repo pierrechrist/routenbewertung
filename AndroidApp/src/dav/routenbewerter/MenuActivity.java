@@ -1,5 +1,7 @@
 package dav.routenbewerter;
 
+import java.util.Date;
+
 import com.dav.routenbewerter.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -12,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -90,7 +93,19 @@ public class MenuActivity extends Activity {
 		User uResult = db.getUser(u);
 		
 		if(!i.getBooleanExtra("offline", false)){
-			db.syncDB(userId);
+			//Testen ob seit der letzten Sync 6 Stunden vergangen sind
+			Date original = new Date(sp.getLong("syncDate", 0));
+			Long now = new Date().getTime();
+			Date minus6 = new Date(now - 6*3600*1000);
+			Log.i("DAV", "Date original: "+original);
+			Log.i("DAV", "Date now: "+new Date(now));
+			Log.i("DAV", "Date -6: "+minus6);
+			if (original.before(minus6)) {
+				db.syncDB(userId);
+				SharedPreferences.Editor ed = sp.edit();
+				ed.putLong("syncDate", now);
+				ed.commit();
+			} 
 			Toast.makeText(getApplicationContext(), "UserId: "+uResult.getUserId()+" UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
 		} else {
 			Toast.makeText(getApplicationContext(), "Offline Modus, UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
@@ -179,6 +194,25 @@ public class MenuActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.mDbSync:
+	        	if(!db.isDbOpen())
+	        		db.openDB();
+	        	db.syncDB(userId);
+	            return true;
+	        case R.id.mPersonalStats:
+	        	Intent personalDetailsActivity = new Intent(getApplicationContext(), PersonalDetailsActivity.class);
+	            personalDetailsActivity.putExtra("userId", userId);
+	            startActivity(personalDetailsActivity);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -198,7 +232,10 @@ public class MenuActivity extends Activity {
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		  IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+		IntentResult scanResult = null;
+		if(requestCode != 0 && resultCode != 0 && intent != null) {
+		  scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+		}
 		  if (scanResult != null) {
 		    Log.i("DAV", "QR Result: "+scanResult.getContents());
 		    if(scanResult.getContents().startsWith("DAV")){
