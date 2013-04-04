@@ -23,7 +23,7 @@
     <string name="routes_button">Routen Liste</string>
     <string name="personal_title">Persönliche Statistik</string>
     <string name="routelist_title">Routen Liste</string>
-    <string name="routedetails_title">Routendetails #</string>
+    <string name="routedetails_title">Routendetails </string>
     <string name="rateroute_title">Routenbewertung</string>
     <string name="personal_username">Benutzername:</string>
     <string name="personal_routecount">Routen Gesamt:</string>
@@ -32,10 +32,10 @@
     <string name="routedetails_routedriver">Routenschrauber:</string>
     <string name="routedetails_creationdate">Erstelldatum:</string>
     <string name="routedetails_rating">Schwierigkeitsgrad:</string>
-    <string name="routedetails_avaragerating">User Schwierigkeitsgrad:</string>
+    <string name="routedetails_avaragerating">Benutzer Schwierigkeitsgrad:</string>
     <string name="routedetails_avaragecategorie">Kategorie:</string>
     <string name="routedetails_ownRating">Eigene Bewertung:</string>
-    <string name="routedetails_ownCategorie">Eigene Categorie:</string>
+    <string name="routedetails_ownCategorie">Eigene Kategorie:</string>
     <string name="routedetails_ownHowClimbed">wie geklettert:</string>
     <string name="rateroute_button">Route bewerten</string>
     <string name="rateroute_rating">Bewertung:</string>
@@ -45,10 +45,10 @@
     <string name="loginOfflineMode">Offline Modus</string>
     <string name="menuQRCode">QR Code Scanner</string>
     <string name="recoverPassword_button">Passwort vergessen?</string>
-    <string name="menuNoFilter">Kein Routen Filter</string>
-    <string name="menuRouteFilter">Routen Filter</string>
-    <string name="menuOldestRoutefilter">10 Ältesten Routen</string>
-    <string name="menuNewestRoutefilter">10 Neusten Routen</string>
+    <string name="menuNoFilter">Kein Filter</string>
+    <string name="menuRouteFilter">Routen filtern</string>
+    <string name="menuOldestRoutefilter">10 ältesten Routen</string>
+    <string name="menuNewestRoutefilter">10 neusten Routen</string>
     <string name="mDbSync">DB Sync</string>
 
 </resources>

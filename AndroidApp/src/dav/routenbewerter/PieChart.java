@@ -56,7 +56,7 @@ public class PieChart extends Drawable {
 
 			// Start und End Angel bestimmen
 			float endAngle = value_sum == 0 ? 0 : 360 * item.itemValue
-					/ (float) value_sum;
+					/ value_sum;
 			float newStartAngle = startAngle + endAngle;
 
 			//Farbe für den Arc des Items festlegen

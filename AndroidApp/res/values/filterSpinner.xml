@@ -46,14 +46,11 @@
     <string-array name="filterWallName">
         <item></item>
         <item>Hauptwand</item>
-        <item>Schulungswand</item>
         <item>WK rechts</item>
         <item>WK links</item>
         <item>Ostwand</item>
         <item>Separee</item>
         <item>Speed</item>
-        <item>Familienausflug</item>
         <item>Entega</item>
-        <item>Weberwändchen</item>
     </string-array>
 </resources>

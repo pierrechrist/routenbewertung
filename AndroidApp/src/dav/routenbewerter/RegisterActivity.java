@@ -39,7 +39,8 @@ public class RegisterActivity extends Activity {
 		
 		accept.setOnClickListener(new OnClickListener()
 	        {
-	          public void onClick(View v)
+	          @Override
+			public void onClick(View v)
 	          {
 	        	  if(password1.getText().toString().equals(password2.getText().toString())) {
 	        		  int userId = db.registerUser(email.getText().toString(), username.getText().toString(), password1.getText().toString());
@@ -57,7 +58,8 @@ public class RegisterActivity extends Activity {
 	        
 		cancel.setOnClickListener(new OnClickListener()
 	        {
-	          public void onClick(View v)
+	          @Override
+			public void onClick(View v)
 	          {
 	        	 finish();
 	          }

@@ -118,7 +118,8 @@ public class MenuActivity extends Activity {
 		
 		routeList.setOnClickListener(new OnClickListener()
 	        {
-	          public void onClick(View v)
+	          @Override
+			public void onClick(View v)
 	          {
 	              Intent routesListActivity = new Intent(getApplicationContext(), RoutesListActivity.class);
 	              routesListActivity.putExtra("userId", userId);
@@ -144,7 +145,8 @@ public class MenuActivity extends Activity {
 	        
 		personalStats.setOnClickListener(new OnClickListener()
 	        {
-	          public void onClick(View v)
+	          @Override
+			public void onClick(View v)
 	          {
 	              Intent personalDetailsActivity = new Intent(getApplicationContext(), PersonalDetailsActivity.class);
 	              personalDetailsActivity.putExtra("userId", userId);
@@ -154,7 +156,8 @@ public class MenuActivity extends Activity {
 		
 		qrCodeScanner.setOnClickListener(new OnClickListener()
         {
-          public void onClick(View v)
+          @Override
+		public void onClick(View v)
           {
         	  IntentIntegrator integrator = new IntentIntegrator(activity);
         	  integrator.initiateScan();
@@ -162,7 +165,8 @@ public class MenuActivity extends Activity {
         });
 		
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup rg, int checkedId) {
+            @Override
+			public void onCheckedChanged(RadioGroup rg, int checkedId) {
             	Log.i("DAV", "Radio Checked: "+checkedId);
                 if(checkedId == R.id.menuRouteFilter) {
                 	rating.setVisibility(View.VISIBLE);
@@ -231,6 +235,7 @@ public class MenuActivity extends Activity {
 		super.onResume();
 	}
 	
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		IntentResult scanResult = null;
 		if(requestCode != 0 && resultCode != 0 && intent != null) {
@@ -262,6 +267,7 @@ public class MenuActivity extends Activity {
 		alert.setView(input);
 
 		alert.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				db.setUserPassword(userName, input.getText().toString());
 				SharedPreferences.Editor ed = sp.edit();
@@ -272,6 +278,7 @@ public class MenuActivity extends Activity {
 
 		alert.setNegativeButton("Abbrechen",
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
 						return;

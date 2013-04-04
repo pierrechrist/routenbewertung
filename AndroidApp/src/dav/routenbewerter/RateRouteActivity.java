@@ -55,7 +55,8 @@ public class RateRouteActivity extends Activity {
 		
 		accept.setOnClickListener(new OnClickListener()
 	        {
-	          public void onClick(View v)
+	          @Override
+			public void onClick(View v)
 	          {
 	        	  Log.i("DAV", "Rating: " + rating.getSelectedItem().toString());
 	        	  db.setRouteRating(rating.getSelectedItem().toString(), howClimbed.getSelectedItem().toString(), categorie.getSelectedItem().toString(), userId, routeId);
@@ -66,7 +67,8 @@ public class RateRouteActivity extends Activity {
 	        
 		cancel.setOnClickListener(new OnClickListener()
 	        {
-	          public void onClick(View v)
+	          @Override
+			public void onClick(View v)
 	          {
 	        	 finish();
 	          }

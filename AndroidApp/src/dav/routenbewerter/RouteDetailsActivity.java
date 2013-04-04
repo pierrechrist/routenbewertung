@@ -74,7 +74,8 @@ public class RouteDetailsActivity extends Activity {
 		
 		rate.setOnClickListener(new OnClickListener()
 	        {
-	          public void onClick(View v)
+	          @Override
+			public void onClick(View v)
 	          {
 	              Intent rateRouteActivity = new Intent(getApplicationContext(), RateRouteActivity.class);
 	              rateRouteActivity.putExtra("userId", userId);

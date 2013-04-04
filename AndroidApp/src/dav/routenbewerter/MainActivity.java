@@ -53,7 +53,8 @@ public class MainActivity extends Activity {
 
 		login.setOnClickListener(new OnClickListener()
 	        {
-	          public void onClick(View v)
+	          @Override
+			public void onClick(View v)
 	          {
 	        	  if(username.getText().toString().equals("") || password.getText().toString().equals("")) {
 	        		  Toast.makeText(getApplicationContext(), "Kein Benutzername oder Passwort eingegeben!", Toast.LENGTH_LONG).show();
@@ -86,7 +87,8 @@ public class MainActivity extends Activity {
 	        	            alert.setMessage("Es besteht keine Internetverbindung. Im Offline Modus fortfahren?"); //Message here
 	        	 
 	        	            alert.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-	        	            public void onClick(DialogInterface dialog, int whichButton) {
+	        	            @Override
+							public void onClick(DialogInterface dialog, int whichButton) {
 	        	            	Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
 	        	                userId = db.getUser(new User(0, null, username.getText().toString())).getUserId();
 	        	                menuActivity.putExtra("userId", userId);
@@ -97,7 +99,8 @@ public class MainActivity extends Activity {
 	        	            });
 	        	 
 	        	            alert.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
-	        	              public void onClick(DialogInterface dialog, int whichButton) {
+	        	              @Override
+							public void onClick(DialogInterface dialog, int whichButton) {
 	        	                  dialog.cancel();
 	        	              }
 	        	            });
@@ -112,7 +115,8 @@ public class MainActivity extends Activity {
 	        
 		register.setOnClickListener(new OnClickListener()
 	        {
-	          public void onClick(View v)
+	          @Override
+			public void onClick(View v)
 	          {
 	        	  if(db.isOnline()) {
 		              Intent registerActivity = new Intent(getApplicationContext(), RegisterActivity.class);
@@ -125,7 +129,8 @@ public class MainActivity extends Activity {
 		
 		recoverPassword.setOnClickListener(new OnClickListener()
         {
-          public void onClick(View v)
+          @Override
+		public void onClick(View v)
           {
         	  /* Alert Dialog Code Start*/     
 	            AlertDialog.Builder alert = new AlertDialog.Builder(context);
@@ -133,7 +138,8 @@ public class MainActivity extends Activity {
 	            alert.setMessage("Ihnen wird per eMail ein neues Passwort zugesendet. Wollen sie fortfahren?"); //Message here
 	 
 	            alert.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-	            @SuppressLint("CommitPrefEdits")
+	            @Override
+				@SuppressLint("CommitPrefEdits")
 				public void onClick(DialogInterface dialog, int whichButton) {
 	            	db.recoverPassword(username.getText().toString());
 		            SharedPreferences.Editor ed = sp.edit();
@@ -143,7 +149,8 @@ public class MainActivity extends Activity {
 	            });
 	 
 	            alert.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
-	              public void onClick(DialogInterface dialog, int whichButton) {
+	              @Override
+				public void onClick(DialogInterface dialog, int whichButton) {
 	                  dialog.cancel();
 	              }
 	            });

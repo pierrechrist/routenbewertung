@@ -61,9 +61,9 @@ public class RouteAdapter extends ArrayAdapter<Route> {
             ImageView start = (ImageView)currentView.findViewById(R.id.listAmpelImage);
 
             if(currentRoute.getPersonalRating() != null) {
-	            if(currentRoute.getPersonalRating().getHowClimbed().equals("Flash"))
+	            if(currentRoute.getPersonalRating().getHowClimbed().equals("Flash") || currentRoute.getPersonalRating().getHowClimbed().equals("Rotpunkt"))
 	            	start.setImageResource(R.drawable.traffic_lights_green);
-	            else if(currentRoute.getPersonalRating().getHowClimbed().equals("Rotpunkt") || currentRoute.getPersonalRating().getHowClimbed().equals("Projekt"))
+	            else if(currentRoute.getPersonalRating().getHowClimbed().equals("Projekt"))
 	            	start.setImageResource(R.drawable.traffic_lights_yellow);
             } else
             	start.setImageResource(R.drawable.traffic_lights_red);

@@ -61,7 +61,7 @@ class DBFunctions {
 			(SELECT avarage_categorie FROM rb_route_details WHERE route_id = r.uid) as avarage_categorie
 			FROM tx_dihlroutes_routelist r 
 			LEFT JOIN tx_dihlroutes_uiaa u ON r.uiaa = u.uid 
-			LEFT JOIN tx_dihlroutes_sektor s ON r.sektor = s.uid WHERE r.deleted = '0'");
+			LEFT JOIN tx_dihlroutes_sektor s ON r.sektor = s.uid WHERE r.deleted = '0' AND r.pid = '853' AND r.boltrow != '0'");
         $no_of_rows = mysql_num_rows($result);
         if ($no_of_rows > 0) {
 			// Routen zurückgeben

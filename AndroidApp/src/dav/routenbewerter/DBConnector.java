@@ -69,6 +69,7 @@ public class DBConnector {
 		} else {
 			return false;
 		}
+		//return true;
 	}
 	
 	public void syncDB(final int userId) {	//Startet ein AsyncTask um die lokale DB mit der entfernten DB zu synchronisieren
@@ -105,6 +106,7 @@ public class DBConnector {
 			//start the progress dialog
 			progressDialog = ProgressDialog.show(activitiy, "", "DB Sync...");
 			new Thread() {
+				@Override
 				@SuppressLint("SimpleDateFormat")
 				public void run() {
 					//Routen in die DB schreiben
@@ -222,8 +224,26 @@ public class DBConnector {
 		return result;
 	}
 	
+	public ObjectSet<Route> getRoutes(String wallName, String rating, String categorie) {	//Holt alle Routen die dem suchparameter entsprechen
+		Query query =  db.query();
+		query.constrain(Route.class);
+		query.descend("boltRow").orderAscending();
+		if(wallName != null)
+			query.descend("wallName").constrain(wallName);
+		if(rating != null)
+			query.descend("rating").constrain(rating);
+		if(categorie != null)
+			query.descend("caategorie").constrain(categorie);
+		ObjectSet<Route> result = query.execute();
+		return result;
+	}
+	
 	public ObjectSet<Route> getRoutes() {	//Holt alle Routen aus der lokalen DB
-		ObjectSet<Route> result = db.queryByExample(Route.class);
+		Query query =  db.query();
+		query.constrain(Route.class);
+		query.descend("boltRow").orderAscending();
+		 
+		ObjectSet<Route> result = query.execute();
 		return result;
 	}
 	
@@ -294,7 +314,8 @@ public class DBConnector {
 	
 	public int registerUser(String eMail, String userName, String password) {
 		int userId = 0;
-		
+
+		if(isOnline()) { 		
 		//User in die entfernte DB schreiben
 		BasicNameValuePair tag = new BasicNameValuePair("tag","register");
 		BasicNameValuePair pairUserName = new BasicNameValuePair("name",userName);
@@ -304,7 +325,7 @@ public class DBConnector {
         String result = "";
 		try {
 			AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, pairUserName, pairEmail, pairUserPassword);
-			result = (String)parser.get();
+			result = parser.get();
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -333,6 +354,7 @@ public class DBConnector {
         }
 		
 		userId = checkUser(userName, password);
+		}
 		return userId;	
 	}
 	
@@ -344,7 +366,7 @@ public class DBConnector {
         int userId = 0;
 		try {
 			AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, userName, userPassword);
-			result = (String)parser.get();
+			result = parser.get();
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -406,7 +428,7 @@ public class DBConnector {
 			try {
 				Log.i("DAV", "next up AsyncTask");
 				AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, pairRouteId, pairUserId, pairCategorie, pairHowClimbed, pairRating);
-				result = (String)parser.get();
+				result = parser.get();
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -481,7 +503,7 @@ public class DBConnector {
 		try {
 			Log.i("DAV", "next up AsyncTask");
 			AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, pairRating);
-			result = (String)parser.get();
+			result = parser.get();
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -517,7 +539,7 @@ public class DBConnector {
 			 String result = "";
 				try {
 					AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, userNamePair);
-					result = (String)parser.get();
+					result = parser.get();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -554,7 +576,7 @@ public class DBConnector {
 			 String result = "";
 				try {
 					AsyncTask<BasicNameValuePair, Integer, String> parser = new JSONParser(activitiy).execute(tag, userNamePair, userPasswordPair);
-					result = (String)parser.get();
+					result = parser.get();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

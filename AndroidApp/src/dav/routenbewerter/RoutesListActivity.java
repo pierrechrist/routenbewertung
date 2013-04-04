@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class RoutesListActivity extends ListActivity {
 
@@ -23,6 +24,7 @@ public class RoutesListActivity extends ListActivity {
 	private String wallName;
 	private String categorie;
 	private String howClimbed;
+	private TextView lable;
 	private Boolean isOldestRoutes;
 	private Boolean isNewestRoutes;
 	private List<Route> result = null;
@@ -31,6 +33,8 @@ public class RoutesListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_routelist);
+		
+		lable = (TextView)this.findViewById(R.id.routedetailsTitle);
 		
 		Intent i = getIntent();
 		userId = i.getIntExtra("userId", 0);
@@ -111,11 +115,15 @@ public class RoutesListActivity extends ListActivity {
 			}
 		} else if(isNewestRoutes) {
 			result = db.getNewsestRoutes();
-
+			lable.setText("10 neusten Routen");
 		} else if(isOldestRoutes) {
 			result = db.getOldestRoutes();
+			lable.setText("10 ältesten Routen");
+		} else if( wallName != null || rating != null || categorie != null) {
+			result = db.getRoutes(wallName, rating, categorie);
+			lable.setText("gefilterte Routen Liste");
 		} else {
-			result = db.getRoutes(new Route(wallName, rating, categorie));
+			result = db.getRoutes();
 		}
 		
 		ListView list = getListView();

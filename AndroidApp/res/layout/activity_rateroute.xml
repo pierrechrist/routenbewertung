@@ -25,8 +25,9 @@
 
             <TextView
                 android:id="@+id/raterouteRatingLable"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.7"
                 android:text="@string/rateroute_rating"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -46,8 +47,9 @@
 
             <TextView
                 android:id="@+id/raterouteClimbedLable"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.7"
                 android:text="@string/rateroute_climbed"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -66,8 +68,9 @@
 
             <TextView
                 android:id="@+id/raterouteCategorieLable"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.7"
                 android:text="@string/rateroute_categorie"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
