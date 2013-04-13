@@ -35,55 +35,51 @@ public class RouteDetailsActivity extends Activity {
 	private TextView flash;
 	private TextView redPoint;
 	private TextView project;
-	private TextView notClimbed;
 	private TextView ownRating;
 	private TextView ownHowClimbed;
 	private TextView ownCategorie;
 	private TextView ownRatingLable;
 	private TextView ownHowClimbedLable;
 	private TextView ownCategorieLable;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_routedetails);
-		
+
 		rate = (Button) this.findViewById(R.id.raterouteButton);
-		routeNumber = (TextView)this.findViewById(R.id.routedetailsNumber);
-		wallName = (TextView)this.findViewById(R.id.routedetailsWallname);
-		routeDriver = (TextView)this.findViewById(R.id.routedetailsRoutedriver);
-		creationDate = (TextView)this.findViewById(R.id.routedetailsCreationdate);
-		handleColor = (TextView)this.findViewById(R.id.routedetailsHandlecolor);
-		rating = (TextView)this.findViewById(R.id.routedetailsRating);
-		avarageRating = (TextView)this.findViewById(R.id.routedetailsAvarageRating);
-		categorie = (TextView)this.findViewById(R.id.routedetailsAvaragecategorie);
-		flash = (TextView)this.findViewById(R.id.routedetailsFlashcount);
-		redPoint = (TextView)this.findViewById(R.id.routedetailsRotpunktcount);
-		project = (TextView)this.findViewById(R.id.routedetailsProjectcount);
-		notClimbed = (TextView)this.findViewById(R.id.routedetailsNotclimbedcount);
-		ownRating = (TextView)this.findViewById(R.id.routedetailsOwnRating);
-		ownHowClimbed = (TextView)this.findViewById(R.id.routedetailsOwnHowClimbed);
-		ownCategorie = (TextView)this.findViewById(R.id.routedetailsOwnCategorie);
-		ownRatingLable = (TextView)this.findViewById(R.id.routedetailsOwnRatingLable);
-		ownHowClimbedLable = (TextView)this.findViewById(R.id.routedetailsOwnHowClimbedLable);
-		ownCategorieLable = (TextView)this.findViewById(R.id.routedetailsOwnCategorieLable);
-		
+		routeNumber = (TextView) this.findViewById(R.id.routedetailsNumber);
+		wallName = (TextView) this.findViewById(R.id.routedetailsWallname);
+		routeDriver = (TextView) this.findViewById(R.id.routedetailsRoutedriver);
+		creationDate = (TextView) this.findViewById(R.id.routedetailsCreationdate);
+		handleColor = (TextView) this.findViewById(R.id.routedetailsHandlecolor);
+		rating = (TextView) this.findViewById(R.id.routedetailsRating);
+		avarageRating = (TextView) this.findViewById(R.id.routedetailsAvarageRating);
+		categorie = (TextView) this.findViewById(R.id.routedetailsAvaragecategorie);
+		flash = (TextView) this.findViewById(R.id.routedetailsFlashcount);
+		redPoint = (TextView) this.findViewById(R.id.routedetailsRotpunktcount);
+		project = (TextView) this.findViewById(R.id.routedetailsProjectcount);
+		ownRating = (TextView) this.findViewById(R.id.routedetailsOwnRating);
+		ownHowClimbed = (TextView) this.findViewById(R.id.routedetailsOwnHowClimbed);
+		ownCategorie = (TextView) this.findViewById(R.id.routedetailsOwnCategorie);
+		ownRatingLable = (TextView) this.findViewById(R.id.routedetailsOwnRatingLable);
+		ownHowClimbedLable = (TextView) this.findViewById(R.id.routedetailsOwnHowClimbedLable);
+		ownCategorieLable = (TextView) this.findViewById(R.id.routedetailsOwnCategorieLable);
+
 		Intent i = getIntent();
 		routeId = i.getIntExtra("routeId", 0);
 		userId = i.getIntExtra("userId", 0);
-		
-		rate.setOnClickListener(new OnClickListener()
-	        {
-	          @Override
-			public void onClick(View v)
-	          {
-	              Intent rateRouteActivity = new Intent(getApplicationContext(), RateRouteActivity.class);
-	              rateRouteActivity.putExtra("userId", userId);
-	              rateRouteActivity.putExtra("routeId", routeId);
-	              startActivity(rateRouteActivity);
-	          }
-	        });
-	        
+
+		rate.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent rateRouteActivity = new Intent(getApplicationContext(), RateRouteActivity.class);
+				rateRouteActivity.putExtra("userId", userId);
+				rateRouteActivity.putExtra("routeId", routeId);
+				startActivity(rateRouteActivity);
+			}
+		});
+
 	}
 
 	@Override
@@ -92,7 +88,7 @@ public class RouteDetailsActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -105,26 +101,24 @@ public class RouteDetailsActivity extends Activity {
 		super.onPause();
 		db.closeDB();
 	}
-	
+
 	@SuppressLint("SimpleDateFormat")
 	@Override
 	protected void onResume() {
 		super.onResume();
 		db = new DBConnector(this);
 		db.openDB();
-		
+
 		Route r = new Route(routeId);
 		r = db.getRoute(r);
-		
-		String date = new SimpleDateFormat("dd.MM.yyyy").format(new Date(r.getCreationDate() * 1000L));		
-		
-		double allCount = r.getFlashCount() + r.getRedpointCount() + r.getNotClimbedCount() + r.getProjectCount();
-		float flashC = (float) (Math.round((r.getFlashCount()/allCount*100)*100)/100.0);
-		float redpointC = (float) (Math.round((r.getRedpointCount()/allCount*100)*100)/100.0);
-		float projectC = (float) (Math.round((r.getProjectCount()/allCount*100)*100)/100.0);
-		float notClimbedC = (float) (Math.round((r.getNotClimbedCount()/allCount*100)*100)/100.0);
-		
-		
+
+		String date = new SimpleDateFormat("dd.MM.yyyy").format(new Date(r.getCreationDate() * 1000L));
+
+		double allCount = r.getFlashCount() + r.getRedpointCount() + r.getProjectCount();
+		float flashC = (float) (Math.round((r.getFlashCount() / allCount * 100) * 100) / 100.0);
+		float redpointC = (float) (Math.round((r.getRedpointCount() / allCount * 100) * 100) / 100.0);
+		float projectC = (float) (Math.round((r.getProjectCount() / allCount * 100) * 100) / 100.0);
+
 		routeNumber.setText(Integer.toString(r.getBoltRow()));
 		wallName.setText(r.getWallName());
 		routeDriver.setText(r.getRouteDriver());
@@ -133,11 +127,10 @@ public class RouteDetailsActivity extends Activity {
 		rating.setText(r.getRating());
 		avarageRating.setText(r.getAverageRating());
 		categorie.setText(r.getAvarageCategorie());
-		flash.setText(flashC+"%");
-		redPoint.setText(redpointC+"%");
-		project.setText(projectC+"%");
-		notClimbed.setText(notClimbedC+"%");
-	      
+		flash.setText(flashC + "%");
+		redPoint.setText(redpointC + "%");
+		project.setText(projectC + "%");
+
 		// get the imageview
 		ImageView imgView = (ImageView) findViewById(R.id.routedetailsPieChart);
 
@@ -146,14 +139,17 @@ public class RouteDetailsActivity extends Activity {
 		pieChart.addItem("Flash", Color.RED, flashC);
 		pieChart.addItem("Projekt", Color.GREEN, projectC);
 		pieChart.addItem("Rotpunkt", Color.BLUE, redpointC);
-		pieChart.addItem("nicht \n geklettert", Color.CYAN, notClimbedC);
 
-		imgView.setImageDrawable(pieChart);
-		
+		if (flashC == 0 && projectC == 0 && redpointC == 0)
+			imgView.setVisibility(View.GONE);
+		else
+			imgView.setVisibility(View.VISIBLE);
+			imgView.setImageDrawable(pieChart);
+
 		Rating a = new Rating(r, new User(userId));
 		a = db.getRating(a);
-		if(a != null) {
-			Log.i("DAV", "Rating: "+ a.getRating());
+		if (a != null) {
+			Log.i("DAV", "Rating: " + a.getRating());
 			Log.i("DAV", "not null");
 			rate.setVisibility(View.GONE);
 			ownRatingLable.setVisibility(View.VISIBLE);
@@ -165,7 +161,7 @@ public class RouteDetailsActivity extends Activity {
 			ownRating.setText(a.getRating());
 			ownHowClimbed.setText(a.getHowClimbed());
 			ownCategorie.setText(a.getCategorie());
-			
+
 		} else
 			Log.i("DAV", "null");
 	}

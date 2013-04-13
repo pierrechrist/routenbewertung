@@ -15,6 +15,21 @@ class UserFunctions {
     function __destruct() {
  
     }
+	
+	/**
+    * Benutzer auslesen
+    */
+    public function getUsers() {
+		$result = mysql_query("SELECT uid, user_name, user_email, crdate FROM rb_user");
+        $no_of_rows = mysql_num_rows($result);
+        if ($no_of_rows > 0) {
+			// Benutzer zurückgeben
+            return $result;
+        } else {
+            // Keine Benutzer gefunden
+            return false;
+        }
+    }
  
     /**
      * Neuen Benutzer anlegen

@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="dav.routenbewerter.MainActivity" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/MainActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="124" y="588"/>    
+    <position height="-1" width="-1" x="127" y="428"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="dav.routenbewerter.PersonalDetailsActivity" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/PersonalDetailsActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="131" y="949"/>    
+    <position height="-1" width="-1" x="128" y="795"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="dav.routenbewerter.RateRouteActivity" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/RateRouteActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="613" y="654"/>    
+    <position height="-1" width="-1" x="877" y="830"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -39,7 +39,7 @@
   </class>  
   <class id="5" language="java" name="dav.routenbewerter.RegisterActivity" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/RegisterActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="134" y="245"/>    
+    <position height="-1" width="-1" x="123" y="72"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="dav.routenbewerter.RouteDetailsActivity" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/RouteDetailsActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="372" y="609"/>    
+    <position height="-1" width="-1" x="374" y="644"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="dav.routenbewerter.RoutesListActivity" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/RoutesListActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="370" y="1093"/>    
+    <position height="-1" width="-1" x="387" y="1139"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="dav.routenbewerter.User" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/User.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="862" y="634"/>    
+    <position height="-1" width="-1" x="882" y="507"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -75,7 +75,7 @@
   </class>  
   <class id="9" language="java" name="dav.routenbewerter.DBConnector" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/DBConnector.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="639" y="174"/>    
+    <position height="-1" width="-1" x="640" y="101"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -84,7 +84,7 @@
   </class>  
   <class id="10" language="java" name="dav.routenbewerter.Route" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/Route.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1170" y="922"/>    
+    <position height="-1" width="-1" x="1176" y="781"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -93,7 +93,7 @@
   </class>  
   <class id="11" language="java" name="dav.routenbewerter.Rating" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/Rating.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="929" y="151"/>    
+    <position height="-1" width="-1" x="925" y="36"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -102,7 +102,7 @@
   </class>  
   <class id="12" language="java" name="dav.routenbewerter.JSONParser" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/JSONParser.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="140" y="11"/>    
+    <position height="-1" width="-1" x="130" y="-150"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -111,7 +111,7 @@
   </class>  
   <class id="13" language="java" name="dav.routenbewerter.RouteAdapter" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/RouteAdapter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1222" y="177"/>    
+    <position height="-1" width="-1" x="1211" y="-57"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -120,7 +120,7 @@
   </class>  
   <class id="14" language="java" name="dav.routenbewerter.PieChart.PieItem" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/PieChart.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="913" y="948"/>    
+    <position height="-1" width="-1" x="603" y="1019"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -129,47 +129,77 @@
   </class>  
   <class id="15" language="java" name="dav.routenbewerter.PieChart" project="DAV_Routenbewerter" 
     file="/DAV_Routenbewerter/src/dav/routenbewerter/PieChart.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="654" y="1001"/>    
+    <position height="-1" width="-1" x="841" y="1154"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <association id="16">    
-    <end type="SOURCE" refId="13" navigable="false">      
-      <attribute id="17" name="route"/>      
-      <multiplicity id="18" minimum="0" maximum="2147483647"/>    
+  <class id="16" language="java" name="dav.routenbewerter.DBSync" project="DAV_Routenbewerter" 
+    file="/DAV_Routenbewerter/src/dav/routenbewerter/DBSync.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="626" y="558"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="dav.routenbewerter.DBSync.changeMessage" project="DAV_Routenbewerter" 
+    file="/DAV_Routenbewerter/src/dav/routenbewerter/DBSync.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="626" y="797"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <nesting id="18">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="17"/>  
+  </nesting>  
+  <association id="19">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="20" name="route"/>      
+      <multiplicity id="21" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="19">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="20" name="user"/>      
-      <multiplicity id="21" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="22">    
+  <nesting id="22">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="14"/>  
+  </nesting>  
+  <association id="23">    
     <end type="SOURCE" refId="15" navigable="false">      
-      <attribute id="23" name="items"/>      
-      <multiplicity id="24" minimum="0" maximum="2147483647"/>    
+      <attribute id="24" name="items"/>      
+      <multiplicity id="25" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="14" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="25">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="14"/>  
-  </nesting>  
   <association id="26">    
-    <end type="SOURCE" refId="11" navigable="false">      
+    <end type="SOURCE" refId="13" navigable="false">      
       <attribute id="27" name="route"/>      
-      <multiplicity id="28" minimum="0" maximum="1"/>    
+      <multiplicity id="28" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="29">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="30" name="user"/>      
+      <multiplicity id="31" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="32">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="33" name="connector"/>      
+      <multiplicity id="34" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

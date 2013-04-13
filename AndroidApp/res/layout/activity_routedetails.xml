@@ -31,7 +31,7 @@
             android:id="@+id/routedetailsNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </LinearLayout>
 
@@ -129,7 +129,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/raterouteButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10pt"
+        android:text="@string/rateroute_button" />
     
     <RelativeLayout
         android:layout_width="match_parent"
@@ -227,26 +235,6 @@
             android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
-    
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/routedetailsNotclimbedcountLable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/notclimbedcount"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/routedetailsNotclimbedcount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    </RelativeLayout>
 
     <ImageView
         android:id="@+id/routedetailsPieChart"
@@ -319,12 +307,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:visibility="gone" />
     </RelativeLayout>
-
-    <Button
-        android:id="@+id/raterouteButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/rateroute_button" />
 
 </LinearLayout>
 </ScrollView>

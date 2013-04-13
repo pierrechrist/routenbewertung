@@ -49,26 +49,23 @@ public class PieChart extends Drawable {
 
 		float startAngle = 0;
 
-		// Jedes Item durchlaufen und zeichnen
+		// Jedes Item durchlaufen und PieChart zeichnen
 		for (PieItem item : items) {
 			if (item.itemValue == 0)
 				continue;
 
 			// Start und End Angel bestimmen
-			float endAngle = value_sum == 0 ? 0 : 360 * item.itemValue
-					/ value_sum;
+			float endAngle = value_sum == 0 ? 0 : 360 * item.itemValue / value_sum;
 			float newStartAngle = startAngle + endAngle;
 
-			//Farbe für den Arc des Items festlegen
+			// Farbe für den Arc des Items festlegen
 			paint.setColor(item.colorValue);
 			paint.setAntiAlias(true);
 			paint.setStyle(Paint.Style.FILL);
 			paint.setStrokeWidth(0.5f);
 
 			// Gradient füll Farbe erstellen
-			LinearGradient linearGradient = new LinearGradient(arc_bounds.left,
-					arc_bounds.top, arc_bounds.right, arc_bounds.bottom,
-					item.colorValue, Color.WHITE, Shader.TileMode.CLAMP);
+			LinearGradient linearGradient = new LinearGradient(arc_bounds.left, arc_bounds.top, arc_bounds.right, arc_bounds.bottom, item.colorValue, Color.WHITE, Shader.TileMode.CLAMP);
 			paint.setShader(linearGradient);
 
 			// Arc zeichnen
@@ -84,9 +81,22 @@ public class PieChart extends Drawable {
 
 			// Arc umrandung zeichnen
 			canvas.drawArc(arc_bounds, startAngle, endAngle, true, linePaint);
+			startAngle = newStartAngle;
+		}
+
+		startAngle = 0;
+
+		// Linie und Text auf PieChart zeichnen
+		for (PieItem item : items) {
+			if (item.itemValue == 0)
+				continue;
+
+			// Start und End Angel bestimmen
+			float endAngle = value_sum == 0 ? 0 : 360 * item.itemValue / value_sum;
+			float newStartAngle = startAngle + endAngle;
 
 			// Mitte des gerade gezeichneten Arcs bestimmen
-			double tdeg = startAngle + (endAngle / 2);														
+			double tdeg = startAngle + (endAngle / 2);
 			float r = arc_bounds.width() / 4;
 			double trad = tdeg * (Math.PI / 180d);
 
@@ -99,14 +109,14 @@ public class PieChart extends Drawable {
 			textPaint.setColor(Color.BLACK);
 			textPaint.setTextSize(textSize);
 
-			// Lonie und Text zeichnen
+			// Linie und Text zeichnen
 			float xEnd = 0;
-			if (tdeg < 90 || tdeg > 270) {	//Linie und Text Rechts zeichnen
-				xEnd = x + 80;
+			if (tdeg < 90 || tdeg > 270) { // Linie und Text Rechts zeichnen
+				xEnd = x + 95;
 				drawString(canvas, textPaint, item.itemName, xEnd, y, false);
 				canvas.drawLine(x, y, xEnd, y, textPaint);
-			} else {	//Linie und Text Links zeichnen
-				xEnd = x - 80;
+			} else { // Linie und Text Links zeichnen
+				xEnd = x - 95;
 				drawString(canvas, textPaint, item.itemName, xEnd, y, true);
 
 				canvas.drawLine(x, y, xEnd, y, textPaint);
@@ -139,21 +149,22 @@ public class PieChart extends Drawable {
 	}
 
 	private Rect bounds = new Rect();
-	void drawString(Canvas canvas, Paint paint, String str, float x, float y, Boolean left) {
-	    String[] lines = str.split("\n");
 
-	    int yoff = 0;
-	    for (int i = 0; i < lines.length; ++i) {
-	    	if(left)
-	    		canvas.drawText(lines[i], x-paint.measureText(lines[i]), y + yoff, paint);
-	    	else
-	    		canvas.drawText(lines[i], x, y + yoff, paint);
-	        paint.getTextBounds(lines[i], 0, lines[i].length(), bounds);
-	        yoff += bounds.height();
-	    }
+	void drawString(Canvas canvas, Paint paint, String str, float x, float y, Boolean left) {
+		String[] lines = str.split("\n");
+
+		int yoff = 0;
+		for (int i = 0; i < lines.length; ++i) {
+			if (left)
+				canvas.drawText(lines[i], x - paint.measureText(lines[i]), y + yoff, paint);
+			else
+				canvas.drawText(lines[i], x, y + yoff, paint);
+			paint.getTextBounds(lines[i], 0, lines[i].length(), bounds);
+			yoff += bounds.height();
+		}
 	}
-	
-	public class PieItem {	//SubClass für PieItems
+
+	public class PieItem { // SubClass für PieItems
 		public String itemName;
 		public int colorValue;
 		public float itemValue;

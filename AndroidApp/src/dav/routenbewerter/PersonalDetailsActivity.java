@@ -60,7 +60,7 @@ public class PersonalDetailsActivity extends Activity {
 		redPointCount.setText(Integer.toString(redpointC));
 		projectCount.setText(Integer.toString(projectC));
 		notClimbedCount
-				.setText(Integer.toString(routeC - (flashC + redpointC)));
+				.setText(Integer.toString(routeC - (flashC + redpointC + projectC)));
 
 		// get the imageview
 		ImageView imgView = (ImageView) findViewById(R.id.routedetailsPieChart);

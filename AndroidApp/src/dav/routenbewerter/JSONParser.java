@@ -20,17 +20,17 @@ import android.util.Log;
 
 public class JSONParser extends AsyncTask<BasicNameValuePair, Integer, String> {
 	
-	private ProgressDialog dialog;
+	public ProgressDialog dialog;
 	
-	public JSONParser(Activity activity) {
+	public JSONParser(Activity activity, String dialogMessage) {
         dialog = new ProgressDialog(activity);
+        this.dialog.setMessage(dialogMessage);
     }
 	
 	@Override
     protected void onPreExecute() {
         super.onPreExecute();
         Log.i("DAV", "AsyncTask starting");
-        this.dialog.setMessage("Hole Daten aus dem Web");
         if(!this.dialog.isShowing()){
             this.dialog.show();
         }
@@ -72,12 +72,4 @@ public class JSONParser extends AsyncTask<BasicNameValuePair, Integer, String> {
 		return result;
 	}
 
-	@Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);   
-        if (dialog.isShowing()) {
-            dialog.dismiss();
-        }
-        Log.i("DAV", "AsyncTask ending");
-    }
 }

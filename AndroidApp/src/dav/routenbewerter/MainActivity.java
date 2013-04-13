@@ -19,146 +19,127 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+@SuppressLint("HandlerLeak")
 public class MainActivity extends Activity {
 
-    private Button login;
-    private Button register;
-    private Button recoverPassword;
-    private EditText username;
-    private EditText password;
-    private CheckBox checkBox;
-    private DBConnector db;
-    private int userId;
-    private final Context context = this;
-    private SharedPreferences sp;
-	
+	public Button login;
+	public Button register;
+	public Button recoverPassword;
+	public EditText username;
+	public EditText password;
+	public CheckBox checkBox;
+	private DBConnector db;
+	private int userId;
+	private final Context context = this;
+	private SharedPreferences sp;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		login = (Button) this.findViewById(R.id.loginButton);
 		register = (Button) this.findViewById(R.id.registerButton);
 		recoverPassword = (Button) this.findViewById(R.id.recoverPasswordButton);
 		checkBox = (CheckBox) this.findViewById(R.id.loginCheckBox);
 		username = (EditText) this.findViewById(R.id.emailText);
 		password = (EditText) this.findViewById(R.id.passwordText);
-		
+
 		sp = getApplication().getSharedPreferences("Login", MODE_PRIVATE);
 		username.setText(sp.getString("Unm", null));
 		password.setText(sp.getString("Psw", null));
 		checkBox.setChecked(sp.getBoolean("Chk", false));
-		Log.i("DAV", "isPasswordResetted: "+sp.getBoolean("isPasswordResetted", false));
+		Log.i("DAV", "isPasswordResetted: " + sp.getBoolean("isPasswordResetted", false));
 		db = new DBConnector(this);
 
-		login.setOnClickListener(new OnClickListener()
-	        {
-	          @Override
-			public void onClick(View v)
-	          {
-	        	  if(username.getText().toString().equals("") || password.getText().toString().equals("")) {
-	        		  Toast.makeText(getApplicationContext(), "Kein Benutzername oder Passwort eingegeben!", Toast.LENGTH_LONG).show();
-	        	  } else {
-	        		  if(db.isOnline()) {
-			        	  userId = db.checkUser(username.getText().toString(), password.getText().toString());
-			        	  if(userId != 0) {
-				              Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
-				              menuActivity.putExtra("userId", userId);
-				              
-				              SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
-				              SharedPreferences.Editor ed = sp.edit();
-				              if(checkBox.isChecked()) {
-				            	  ed.putString("Unm",username.getText().toString());              
-				            	  ed.putString("Psw",password.getText().toString()); 
-				            	  ed.putBoolean("Chk", true);
-				              } else {
-				            	  ed.putString("Unm",null);              
-					              ed.putString("Psw",null);
-					              ed.putBoolean("Chk", false);
-				              }
-				              ed.commit();		           		              
-				              startActivity(menuActivity);
-			        	  } 
-	        		  } else {
-	        			  Toast.makeText(getApplicationContext(), "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
-	        			  /* Alert Dialog Code Start*/     
-	        	            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-	        	            alert.setTitle("Offline Modus?"); //Set Alert dialog title here
-	        	            alert.setMessage("Es besteht keine Internetverbindung. Im Offline Modus fortfahren?"); //Message here
-	        	 
-	        	            alert.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-	        	            @Override
+		new Thread() {
+			@Override
+			public void run() {
+				
+			}
+		}.run();
+		login.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (username.getText().toString().equals("") || password.getText().toString().equals("")) {
+					Toast.makeText(getApplicationContext(), "Kein Benutzername oder Passwort eingegeben!", Toast.LENGTH_LONG).show();
+				} else {
+					if (db.isOnline()) {
+
+								db.checkUser(username.getText().toString(), password.getText().toString());
+
+					} else {
+						Toast.makeText(getApplicationContext(), "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
+						/* Alert Dialog Code Start */
+						AlertDialog.Builder alert = new AlertDialog.Builder(context);
+						alert.setTitle("Offline Modus?"); // Set Alert dialog title here
+						alert.setMessage("Es besteht keine Internetverbindung. Im Offline Modus fortfahren?"); // Message here
+
+						alert.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int whichButton) {
-	        	            	Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
-	        	                userId = db.getUser(new User(0, null, username.getText().toString())).getUserId();
-	        	                menuActivity.putExtra("userId", userId);
-	        	                menuActivity.putExtra("offline", true);
-	        	                startActivity(menuActivity);
-	        	 
-	        	              }
-	        	            });
-	        	 
-	        	            alert.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
-	        	              @Override
+								Intent menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
+								userId = db.getUser(new User(0, null, username.getText().toString())).getUserId();
+								menuActivity.putExtra("userId", userId);
+								menuActivity.putExtra("offline", true);
+								startActivity(menuActivity);
+
+							}
+						});
+
+						alert.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int whichButton) {
-	        	                  dialog.cancel();
-	        	              }
-	        	            });
-	        	            AlertDialog alertDialog = alert.create();
-	        	            alertDialog.show();
-	        	       /* Alert Dialog Code End*/    
-	        		  }
-	        	  }
-	          }
-	        });
-	        
-	        
-		register.setOnClickListener(new OnClickListener()
-	        {
-	          @Override
-			public void onClick(View v)
-	          {
-	        	  if(db.isOnline()) {
-		              Intent registerActivity = new Intent(getApplicationContext(), RegisterActivity.class);
-		              startActivity(registerActivity);
-	        	  } else {
-        			  Toast.makeText(getApplicationContext(), "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
-        		  }
-	          }
-	        });
-		
-		recoverPassword.setOnClickListener(new OnClickListener()
-        {
-          @Override
-		public void onClick(View v)
-          {
-        	  /* Alert Dialog Code Start*/     
-	            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-	            alert.setTitle("Passwort vergessen?"); //Set Alert dialog title here
-	            alert.setMessage("Ihnen wird per eMail ein neues Passwort zugesendet. Wollen sie fortfahren?"); //Message here
-	 
-	            alert.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-	            @Override
-				@SuppressLint("CommitPrefEdits")
-				public void onClick(DialogInterface dialog, int whichButton) {
-	            	db.recoverPassword(username.getText().toString());
-		            SharedPreferences.Editor ed = sp.edit();
-		            ed.putBoolean("isPasswordResetted", true);
-		            ed.commit();	
-	              }
-	            });
-	 
-	            alert.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
-	              @Override
-				public void onClick(DialogInterface dialog, int whichButton) {
-	                  dialog.cancel();
-	              }
-	            });
-	            AlertDialog alertDialog = alert.create();
-	            alertDialog.show();
-	       /* Alert Dialog Code End*/  
-          }
-        });
+								dialog.cancel();
+							}
+						});
+						AlertDialog alertDialog = alert.create();
+						alertDialog.show();
+						/* Alert Dialog Code End */
+					}
+				}
+			}
+		});
+
+		register.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (db.isOnline()) {
+					Intent registerActivity = new Intent(getApplicationContext(), RegisterActivity.class);
+					startActivity(registerActivity);
+				} else {
+					Toast.makeText(getApplicationContext(), "Keine Internetverbindung vorhanden", Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+		recoverPassword.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				/* Alert Dialog Code Start */
+				AlertDialog.Builder alert = new AlertDialog.Builder(context);
+				alert.setTitle("Passwort vergessen?"); // Set Alert dialog title here
+				alert.setMessage("Ihnen wird per eMail ein neues Passwort zugesendet. Wollen sie fortfahren?"); // Message here
+
+				alert.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+					@Override
+					@SuppressLint("CommitPrefEdits")
+					public void onClick(DialogInterface dialog, int whichButton) {
+						db.recoverPassword(username.getText().toString());
+					}
+				});
+
+				alert.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.cancel();
+					}
+				});
+				AlertDialog alertDialog = alert.create();
+				alertDialog.show();
+				/* Alert Dialog Code End */
+			}
+		});
 	}
 
 	@Override
@@ -193,7 +174,5 @@ public class MainActivity extends Activity {
 		super.onResume();
 		db.openDB();
 	}
-	
-	
 
 }

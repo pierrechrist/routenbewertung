@@ -12,13 +12,23 @@ public class Rating {
 	boolean sent;
 	
 	
-	public Rating(String rating, String howClimbed, String categorie,
-			Date date, User user, Route route, boolean sent) {
+	public Rating(String rating, String howClimbed, String categorie, User user, Route route, boolean sent) {
 		super();
 		this.rating = rating;
 		this.howClimbed = howClimbed;
 		this.categorie = categorie;
-		this.date = date;
+		this.date = null;
+		this.user = user;
+		this.route = route;
+		this.sent = sent;
+	}
+	
+	public Rating(String rating, String howClimbed, String categorie, Date date, User user, Route route, boolean sent) {
+		super();
+		this.rating = rating;
+		this.howClimbed = howClimbed;
+		this.categorie = categorie;
+		this.date = null;
 		this.user = user;
 		this.route = route;
 		this.sent = sent;

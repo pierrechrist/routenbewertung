@@ -7,6 +7,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -26,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressLint("HandlerLeak")
 public class MenuActivity extends Activity {
 
 	private Button routeList;
@@ -102,9 +104,6 @@ public class MenuActivity extends Activity {
 			Log.i("DAV", "Date -6: "+minus6);
 			if (original.before(minus6)) {
 				db.syncDB(userId);
-				SharedPreferences.Editor ed = sp.edit();
-				ed.putLong("syncDate", now);
-				ed.commit();
 			} 
 			Toast.makeText(getApplicationContext(), "UserId: "+uResult.getUserId()+" UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
 		} else {

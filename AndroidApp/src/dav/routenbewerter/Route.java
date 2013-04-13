@@ -17,9 +17,7 @@ public class Route {
 	int flashCount;
 	int redpointCount;
 	int projectCount;
-	int notClimbedCount;
-	
-		
+
 	public Route(int routeNumber) {
 		super();
 		this.routeNumber = routeNumber;
@@ -37,7 +35,7 @@ public class Route {
 		this.redpointCount = 0;
 		this.boltRow = 0;
 	}
-	
+
 	public Route(String wallName, String rating, String categorie) {
 		super();
 		this.routeNumber = 0;
@@ -56,8 +54,8 @@ public class Route {
 		this.boltRow = 0;
 	}
 
-	public Route(int routeNumber, String handleColor, String routeDriver,
-			String wallName, int creationDate, int topRobe, int boltRow, String rating, String averageRating, int ratingCount, String avarageCategorie, int flashCount, int redpointCount, int projectCount, int notClimbed) {
+	public Route(int routeNumber, String handleColor, String routeDriver, String wallName, int creationDate, int topRobe, int boltRow, String rating, String averageRating, int ratingCount,
+			String avarageCategorie, int flashCount, int redpointCount, int projectCount) {
 		super();
 		this.routeNumber = routeNumber;
 		this.handleColor = handleColor;
@@ -73,55 +71,69 @@ public class Route {
 		this.flashCount = flashCount;
 		this.redpointCount = redpointCount;
 		this.projectCount = projectCount;
-		this.notClimbedCount = notClimbed;
 		this.boltRow = boltRow;
 	}
-	
+
 	public int getRouteNumber() {
 		return routeNumber;
 	}
+
 	public void setRouteNumber(int routeNumber) {
 		this.routeNumber = routeNumber;
 	}
+
 	public String getHandleColor() {
 		return handleColor;
 	}
+
 	public void setHandleColor(String handleColor) {
 		this.handleColor = handleColor;
 	}
+
 	public String getRouteDriver() {
 		return routeDriver;
 	}
+
 	public void setRouteDriver(String routeDriver) {
 		this.routeDriver = routeDriver;
 	}
+
 	public String getWallName() {
 		return wallName;
 	}
+
 	public void setWallName(String wallName) {
 		this.wallName = wallName;
 	}
+
 	public int getCreationDate() {
 		return creationDate;
 	}
+
 	public void setCreationDate(int creationDate) {
 		this.creationDate = creationDate;
 	}
+
 	public String getAverageRating() {
 		return averageRating;
 	}
+
 	public void setAverageRating(String averageRating) {
 		this.averageRating = averageRating;
 	}
+
 	public int getRatingCount() {
 		return ratingCount;
 	}
+
 	public void setRatingCount(int ratingCount) {
 		this.ratingCount = ratingCount;
 	}
+
 	public String getAvarageCategorie() {
 		return avarageCategorie;
 	}
+
 	public void setAvarageCategorie(String avarageCategorie) {
 		this.avarageCategorie = avarageCategorie;
 	}
@@ -158,14 +170,6 @@ public class Route {
 		this.redpointCount = redpointCount;
 	}
 
-	public int getNotClimbedCount() {
-		return notClimbedCount;
-	}
-
-	public void setNotClimbedCount(int notClimbedCount) {
-		this.notClimbedCount = notClimbedCount;
-	}	
-	
 	public int getBoltRow() {
 		return boltRow;
 	}
@@ -189,7 +193,5 @@ public class Route {
 	public void setRating(String rating) {
 		this.rating = rating;
 	}
-	
-	
-	
+
 }
