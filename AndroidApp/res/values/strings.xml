@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">DAV Routenbewerter</string>
+    <string name="api_url">http://80.82.209.90/~web1/AndroidWebAPI/index.php</string>
     <string name="action_settings">Einstellungen</string>
     <string name="accept_button">Bestätigen</string>
     <string name="cancel_button">Abbrechen</string>
@@ -50,5 +51,6 @@
     <string name="menuOldestRoutefilter">10 ältesten Routen</string>
     <string name="menuNewestRoutefilter">10 neusten Routen</string>
     <string name="mDbSync">DB Sync</string>
+    <string name="passwordChange">Passwort ändern</string>
 
 </resources>

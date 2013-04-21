@@ -1,5 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/mDbSync" android:title="@string/mDbSync"></item>
     <item android:id="@+id/mPersonalStats" android:title="@string/personal_button"></item>
-
+    <item android:id="@+id/mPasswordChange" android:title="@string/passwordChange"></item>
 </menu>

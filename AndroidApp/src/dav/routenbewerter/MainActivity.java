@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,7 +48,6 @@ public class MainActivity extends Activity {
 		username.setText(sp.getString("Unm", null));
 		password.setText(sp.getString("Psw", null));
 		checkBox.setChecked(sp.getBoolean("Chk", false));
-		Log.i("DAV", "isPasswordResetted: " + sp.getBoolean("isPasswordResetted", false));
 		db = new DBConnector(this);
 
 		new Thread() {

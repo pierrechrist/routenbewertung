@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -87,7 +86,6 @@ public class PersonalDetailsActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		db.closeDB();
-		Log.i("DAV", "DB Geschlossen. Activity Destroyed");
 	}
 
 	@Override

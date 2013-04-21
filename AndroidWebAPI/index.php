@@ -1,9 +1,9 @@
 <?php
 /**
- * Datei API requests zu bearbeiten
- *
+ * Android App API
  * Jeder request wird anhand des Tags identifiziert
  * Rückgabe ist JSON
+ * Wenn kein Tag gesetzt wurde wird an die admin.php Seite weitergeleitet
 **/ 
 
 // Überprüfen ob Tag gesetzt wurde
@@ -113,6 +113,8 @@ if (isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
 			echo json_encode($response);
 		}
 	} else if ($tag == 'getroutes') {
+		$timestamp = $_REQUEST['timestamp'];
+	
 		// Routen aus der Datenbank laden
 		$routes = $dbF->getRoutes();
 		if ($routes) {
@@ -120,9 +122,21 @@ if (isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
 			$response["success"] = 1;
 			// Jede Route in den JSON Response schreiben
 			while($route=mysql_fetch_assoc($routes)) {
-				$route["avarage_rating"]=$dbF->getAvarageRouteRating($route["uid"]);
-				$route["color"]=utf8_encode($route["color"]);
-				$response["route"][]=$route;
+				$ratingTimestamp = $dbF->getNewestRouteRatingTimestamp($route["uid"]);
+				//echo strtotime($ratingTimestamp['crdate']);
+				if($ratingTimestamp == false) {
+					if($timestamp < $route["dateon"]){
+						$route["avarage_rating"]=$dbF->getAvarageRouteRating($route["uid"]);
+						$route["color"]=utf8_encode($route["color"]);
+						$response["route"][]=$route;
+					}
+				} else {
+					if($timestamp < strtotime($ratingTimestamp['crdate'])){
+						$route["avarage_rating"]=$dbF->getAvarageRouteRating($route["uid"]);
+						$route["color"]=utf8_encode($route["color"]);
+						$response["route"][]=$route;
+					}
+				}
 			}				
 			echo json_encode($response);
 		} else {
@@ -167,19 +181,19 @@ if (isset($_REQUEST['tag']) && $_REQUEST['tag'] != '') {
 		// Benutzer in der Datenbank suchen und neues Passwort setzten
 		$user = $userF->setPassword($name, $password);
 		if ($user != false) {
-			// Passwort erfolgreich gesetzt
-			$response["success"] = 1;			
-			echo json_encode($response);
+		// Passwort erfolgreich gesetzt
+		$response["success"] = 1;	
+		echo json_encode($response);
 		} else {
-			// Benutzer nicht gefunden
-			$response["error"] = 1;
-			$response["error_msg"] = "Fehler beim setzen des neuen Passworts";
-			echo json_encode($response);
+		// Benutzer nicht gefunden
+		$response["error"] = 1;
+		$response["error_msg"] = "Fehler beim setzen des neuen Passworts";
+		echo json_encode($response);
 		}
 	} else {
         echo "Falsche Anfrage";
     }
 } else {
-    echo "Zugriff verweigert";
+    header("location:admin.php");
 }
 ?>

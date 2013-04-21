@@ -99,19 +99,12 @@ public class MenuActivity extends Activity {
 			Date original = new Date(sp.getLong("syncDate", 0));
 			Long now = new Date().getTime();
 			Date minus6 = new Date(now - 6*3600*1000);
-			Log.i("DAV", "Date original: "+original);
-			Log.i("DAV", "Date now: "+new Date(now));
-			Log.i("DAV", "Date -6: "+minus6);
 			if (original.before(minus6)) {
 				db.syncDB(userId);
 			} 
-			Toast.makeText(getApplicationContext(), "UserId: "+uResult.getUserId()+" UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
-		} else {
-			Toast.makeText(getApplicationContext(), "Offline Modus, UserName: "+uResult.getUserName(), Toast.LENGTH_LONG).show();
 		}  
 		
 		if(sp.getBoolean("isPasswordResetted", false)) {
-		Log.i("DAV", "isPasswordResetted: "+sp.getBoolean("isPasswordResetted", false));
 			this.setUserPasswordDialog(uResult.getUserName());
 		}
 		
@@ -166,7 +159,6 @@ public class MenuActivity extends Activity {
 		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
 			public void onCheckedChanged(RadioGroup rg, int checkedId) {
-            	Log.i("DAV", "Radio Checked: "+checkedId);
                 if(checkedId == R.id.menuRouteFilter) {
                 	rating.setVisibility(View.VISIBLE);
                 	ratingLable.setVisibility(View.VISIBLE);
@@ -211,6 +203,14 @@ public class MenuActivity extends Activity {
 	        	Intent personalDetailsActivity = new Intent(getApplicationContext(), PersonalDetailsActivity.class);
 	            personalDetailsActivity.putExtra("userId", userId);
 	            startActivity(personalDetailsActivity);
+	            return true;
+	        case R.id.mPasswordChange:
+	        	if(!db.isDbOpen()) {
+	        		db.openDB();
+	        	}
+	        	User u = new User(userId, null, null);
+	    		User uResult = db.getUser(u);
+	        	this.setUserPasswordDialog(uResult.getUserName());
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);

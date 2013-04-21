@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,9 +41,13 @@ public class RateRouteActivity extends Activity {
 		categorie = (Spinner) findViewById(R.id.raterouteCategorie);
 		howClimbed = (Spinner) findViewById(R.id.raterouteClimbed);
 
+		db = new DBConnector(this);
+		db.openDB();
+		
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.ratingNumber, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		rating.setAdapter(adapter);
+		rating.setSelection(this.getPreselectRating());
 		adapter = ArrayAdapter.createFromResource(this, R.array.categorie, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		categorie.setAdapter(adapter);
@@ -52,14 +55,10 @@ public class RateRouteActivity extends Activity {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		howClimbed.setAdapter(adapter);
 
-		db = new DBConnector(this);
-		db.openDB();
-
 		accept.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Log.i("DAV", "Rating: " + rating.getSelectedItem().toString());
 				db.setRouteRating(rating.getSelectedItem().toString(), howClimbed.getSelectedItem().toString(), categorie.getSelectedItem().toString(), userId, routeId);
 			}
 		});
@@ -89,6 +88,18 @@ public class RateRouteActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 		db.closeDB();
+	}
+	
+	private int getPreselectRating() {
+		Route r = new Route(routeId);
+		r = db.getRoute(r);
+		int preselect = 0;
+		for(int i = 0; i < rating.getCount(); i++) {
+			if(rating.getItemAtPosition(i).toString().equals(r.getRating())) {
+				preselect = i;
+			}
+		}
+		return preselect;
 	}
 
 }

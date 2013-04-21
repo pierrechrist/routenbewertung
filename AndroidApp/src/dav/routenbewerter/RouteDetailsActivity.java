@@ -151,7 +151,7 @@ public class RouteDetailsActivity extends Activity {
 		if (a != null) {
 			Log.i("DAV", "Rating: " + a.getRating());
 			Log.i("DAV", "not null");
-			rate.setVisibility(View.GONE);
+			rate.setText("Bewertung ändern");
 			ownRatingLable.setVisibility(View.VISIBLE);
 			ownHowClimbedLable.setVisibility(View.VISIBLE);
 			ownCategorieLable.setVisibility(View.VISIBLE);
@@ -162,8 +162,7 @@ public class RouteDetailsActivity extends Activity {
 			ownHowClimbed.setText(a.getHowClimbed());
 			ownCategorie.setText(a.getCategorie());
 
-		} else
-			Log.i("DAV", "null");
+		}
 	}
 
 }

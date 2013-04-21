@@ -9,7 +9,6 @@ import com.db4o.ObjectSet;
 import android.os.Bundle;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -61,7 +60,6 @@ public class RoutesListActivity extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Intent routeDetailsActivity = new Intent(getApplicationContext(), RouteDetailsActivity.class);
-		Log.i("DAV", "RouteId: " + result.get(position).routeNumber);
 		routeDetailsActivity.putExtra("routeId", result.get(position).routeNumber);
 		routeDetailsActivity.putExtra("userId", userId);
 		listPosition = position;
@@ -86,7 +84,6 @@ public class RoutesListActivity extends ListActivity {
 		db = new DBConnector(this);
 		db.openDB();
 		if (howClimbed != null) {
-			Log.i("DAV", "howClimbed: " + howClimbed);
 			ObjectSet<Rating> ratings = db.getRatings(new Rating(howClimbed, db.getUser(new User(userId))));
 			Rating r = null;
 			while (ratings.hasNext()) {

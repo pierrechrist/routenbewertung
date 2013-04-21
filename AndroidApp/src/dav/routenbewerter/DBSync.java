@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.dav.routenbewerter.R;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Query;
@@ -27,6 +28,8 @@ import com.db4o.query.Query;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -37,6 +40,8 @@ public class DBSync extends AsyncTask<Integer, Integer, String> {
 	private ObjectContainer db;
 	private InputStream is = null;
 	private ArrayList<NameValuePair> nameValuePairs = null;
+	private Date lastSync;
+	private String url;
 
 	class changeMessage implements Runnable {
 		String str;
@@ -58,6 +63,10 @@ public class DBSync extends AsyncTask<Integer, Integer, String> {
 		dialog.setProgress(0);
 		dialog.setMax(100);
 		dialog.setCancelable(false);
+		SharedPreferences sp = activity.getApplication().getSharedPreferences("Login", Context.MODE_PRIVATE);
+		url = activity.getResources().getString(R.string.api_url);
+		lastSync = new Date(sp.getLong("syncDate", 0));
+		Log.i("DAV","lastSync 0"+lastSync.getTime()+"");
 		this.connector = connector;
 		this.db = db;
 	}
@@ -78,10 +87,20 @@ public class DBSync extends AsyncTask<Integer, Integer, String> {
 		String result = "";
 		nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("tag", "getroutes"));
-
+		if(lastSync.getTime() == 00) {
+			nameValuePairs.add(new BasicNameValuePair("timestamp", "0"));
+		} else {
+			nameValuePairs.add(new BasicNameValuePair("timestamp", (lastSync.getTime()+"").substring(0, 10)));
+		}
 		result = this.httpPost(nameValuePairs);
-
+		
 		this.setRoutes(result, params[0]);
+		
+		nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("tag", "getroutes"));
+		result = this.httpPost(nameValuePairs);
+		
+		this.deleteRoutes(result);
 
 		nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("tag", "getratings"));
@@ -111,7 +130,7 @@ public class DBSync extends AsyncTask<Integer, Integer, String> {
 		// http post
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httppost = new HttpPost("http://80.82.209.90/~web1/AndroidWebAPI/index.php"); // Adresse des PHP Scripts das auf die DB zugreift und JSON zurückliefert
+			HttpPost httppost = new HttpPost(url); // Adresse des PHP Scripts das auf die DB zugreift und JSON zurückliefert
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			HttpResponse response = httpclient.execute(httppost);
 			HttpEntity entity = response.getEntity();
@@ -190,10 +209,6 @@ public class DBSync extends AsyncTask<Integer, Integer, String> {
 				else
 					rating = json_data.getString("rating");
 
-				r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), json_data.getString("sektor"), json_data.getInt("dateon"),
-						json_data.getInt("tr"), json_data.getInt("boltrow"), rating, json_data.getString("avarage_rating"), json_data.getInt("rating_count"), json_data.getString("avarage_categorie"),
-						json_data.getInt("flash_count"), json_data.getInt("redpoint_count"), json_data.getInt("project_count"));
-
 				if (!dbresult.isEmpty()) {
 					Route found = dbresult.next();
 					if (!found.equals(r)) {
@@ -205,30 +220,13 @@ public class DBSync extends AsyncTask<Integer, Integer, String> {
 						db.store(found);
 					}
 				} else {
+					r = new Route(json_data.getInt("uid"), json_data.getString("color"), json_data.getString("createdby"), json_data.getString("sektor"), json_data.getInt("dateon"),
+							json_data.getInt("tr"), json_data.getInt("boltrow"), rating, json_data.getString("avarage_rating"), json_data.getInt("rating_count"), json_data.getString("avarage_categorie"),
+							json_data.getInt("flash_count"), json_data.getInt("redpoint_count"), json_data.getInt("project_count"));
 					db.store(r);
 					connector.createNotification(userId, r.getRouteNumber());
 				}
 				dialog.setProgress(i);
-			}
-			ObjectSet<Route> r = connector.getRoutes();
-			if (r.size() != i) {
-				Log.i("DAV", "Mehr Routen in lokaler DB als in entfernter DB");
-				while (r.hasNext()) {
-					Boolean found = false;
-					Route route = r.next();
-					for (i = 0; i < jArray.length(); i++) {
-						JSONObject json_data = jArray.getJSONObject(i);
-						if (route.getRouteNumber() == json_data.getInt("uid"))
-							found = true;
-					}
-					if (!found) {
-						Rating rating = connector.getRating(new Rating(route, null));
-						db.delete(route);
-						if (rating != null)
-							db.delete(rating);
-						Log.i("DAV", "Route gelöscht: " + route.getRouteNumber());
-					}
-				}
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -236,6 +234,36 @@ public class DBSync extends AsyncTask<Integer, Integer, String> {
 		}
 	}
 
+	private void deleteRoutes(String result) {
+		/* TODO Nichtmehr vorhandene Routen löschen */
+		JSONObject jObj;
+		try {
+			jObj = new JSONObject(result);
+			JSONArray jArray = jObj.getJSONArray("route");
+			ObjectSet<Route> r = connector.getRoutes();	
+			Log.i("DAV", "Mehr Routen in lokaler DB als in entfernter DB");
+			while (r.hasNext()) {
+				Boolean found = false;
+				Route route = r.next();
+				for (int i = 0; i < jArray.length(); i++) {
+					JSONObject json_data = jArray.getJSONObject(i);
+					if (route.getRouteNumber() == json_data.getInt("uid"))
+						found = true;
+				}
+				if (!found) {
+					Rating rating = connector.getRating(new Rating(route, null));
+					db.delete(route);
+					if (rating != null)
+						db.delete(rating);
+					Log.i("DAV", "Route gelöscht: " + route.getRouteNumber());
+				}
+			}	
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@SuppressLint("SimpleDateFormat")
 	private void setRatings(String result, int userId) {
 		try {
@@ -243,9 +271,6 @@ public class DBSync extends AsyncTask<Integer, Integer, String> {
 			Log.i("DAV", "ratingSnyc_success: " + jObj.getString("success"));
 			Log.i("DAV", "ratingSnyc_error: " + jObj.getString("error"));
 			JSONArray jArray = jObj.getJSONArray("rating");
-			Log.i("DAV", "local Ratings: " + connector.getRatings(new Rating(new User(userId))).size());
-			Log.i("DAV", "local Ratings: " + connector.getRatings(new Rating(new User(0))).size());
-			Log.i("DAV", "remote Ratings: " + jArray.length());
 			if (connector.getRatings(new Rating(new User(userId))).size() < jArray.length()) {
 				connector.activitiy.runOnUiThread((Runnable) new changeMessage("Schreibe Ratings in die lokale DB", dialog));
 				dialog.setProgress(0);

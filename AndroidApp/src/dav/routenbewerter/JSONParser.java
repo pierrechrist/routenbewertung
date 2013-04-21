@@ -13,6 +13,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.dav.routenbewerter.R;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -21,10 +23,12 @@ import android.util.Log;
 public class JSONParser extends AsyncTask<BasicNameValuePair, Integer, String> {
 	
 	public ProgressDialog dialog;
+	private String url;
 	
 	public JSONParser(Activity activity, String dialogMessage) {
         dialog = new ProgressDialog(activity);
         this.dialog.setMessage(dialogMessage);
+		url = activity.getResources().getString(R.string.api_url);
     }
 	
 	@Override
@@ -47,7 +51,7 @@ public class JSONParser extends AsyncTask<BasicNameValuePair, Integer, String> {
 		 // http post
 		 try {
 			 HttpClient httpclient = new DefaultHttpClient();
-			 HttpPost httppost = new HttpPost("http://80.82.209.90/~web1/AndroidWebAPI/index.php");	//Adresse des PHP Scripts das auf die DB zugreift und JSON zurückliefert
+			 HttpPost httppost = new HttpPost(url);	//Adresse des PHP Scripts das auf die DB zugreift und JSON zurückliefert
 			 httppost.setEntity (new UrlEncodedFormEntity(nameValuePairs));
 			 HttpResponse response = httpclient.execute(httppost);
 			 HttpEntity entity = response.getEntity();

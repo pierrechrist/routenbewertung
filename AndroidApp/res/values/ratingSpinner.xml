@@ -30,6 +30,7 @@
         <item>11</item>
     </string-array>
     <string-array name="categorie">
+        <item></item>
         <item>Fingerkraft</item>
         <item>Kraft</item>
         <item>Ausdauer</item>

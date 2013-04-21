@@ -32,9 +32,9 @@ class UserFunctions {
     }
  
     /**
-     * Neuen Benutzer anlegen
-     * Gibt Benutzer Details zurück
-     */
+    * Neuen Benutzer anlegen
+    * Gibt Benutzer Details zurück
+    */
     public function storeUser($name, $email, $password) {
         $hash = $this->hashSSHA($password);
         $encrypted_password = $hash["encrypted"]; // Encrypted Passwort
@@ -52,8 +52,9 @@ class UserFunctions {
     }
  
     /**
-     * Benutzer durch Benutzername und Passwort zurückgeben
-     */
+    * Benutzer durch Benutzername und Passwort zurückgeben
+	* Gibt true zurück wenn der Benutzer existiert und das Psswort übereinstimmt
+    */
     public function getUserByNameAndPassword($name, $password) {
         $result = mysql_query("SELECT * from rb_user WHERE user_name = '$name'") or die(mysql_error());
         $no_of_rows = mysql_num_rows($result);
@@ -74,8 +75,8 @@ class UserFunctions {
     }
  
     /**
-     * Testen ob es den gesuchten Benutzer gibt
-     */
+    * Testen ob es den gesuchten Benutzer gibt
+    */
     public function isUserExisted($name) {
         $result = mysql_query("SELECT user_name from rb_user WHERE user_name = '$name'");
         $no_of_rows = mysql_num_rows($result);
@@ -88,9 +89,9 @@ class UserFunctions {
         }
     }
  
-     /**
-     * Verlorenes Passwort an Email Adresse senden
-     */
+    /**
+    * Verlorenes Passwort an Email Adresse senden
+    */
 	public function recoverPassword($name) {
         $result = mysql_query("SELECT * FROM rb_user WHERE user_name = '$name'") or die(mysql_error());
         $no_of_rows = mysql_num_rows($result);
@@ -105,7 +106,7 @@ class UserFunctions {
 			//Password zusenden
 			$to = $result['user_email'];
 			$subject = "DAV Routenbewerter Passwort";
-			$message = "Das Passwort für ihren DAV Routenbewerter Login lautet:\n\n$password";
+			$message = "Mit dieser Mail erhalten sie ein vorrübergehendes Passwort für die DAV Routenbewerter App\n Beim nächsten Login werden sie dazu aufgefordert ein eigenes neues Passwort zu vergeben.\n\nIhr vorrübergehndes Passwort lautet: $password";
 			$from = "dav@soret-corp.tk";
 			$headers = "From:" . $from;
 			mail($to,$subject,$message,$headers);
@@ -116,9 +117,9 @@ class UserFunctions {
         }
     }
 	
-     /**
-     * Neues Passwort setzten
-     */
+    /**
+    * Neues Passwort setzten
+    */
 	public function setPassword($name, $password) {
 		$hash = $this->hashSSHA($password);
 		$encrypted_password = $hash["encrypted"]; // Encrypted Passwort
@@ -128,9 +129,9 @@ class UserFunctions {
     }
  
     /**
-     * Passwort encrypten
-     * Gibt salt und encrypted Passwort zurück
-     */
+    * Passwort encrypten
+    * Gibt salt und encrypted Passwort zurück
+    */
     public function hashSSHA($password) {
  
         $salt = sha1(rand());
@@ -141,9 +142,9 @@ class UserFunctions {
     }
  
     /**
-     * Passwort encrypten mit vorhandenem salt Wert
-     * Gibt Hash String zurück
-     */
+    * Passwort encrypten mit vorhandenem salt Wert
+    * Gibt Hash String zurück
+    */
     public function checkhashSSHA($salt, $password) {
  
         $hash = base64_encode(sha1($password . $salt, true) . $salt);

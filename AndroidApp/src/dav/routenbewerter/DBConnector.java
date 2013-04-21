@@ -185,8 +185,6 @@ public final class DBConnector {
 					try {
 						jObj = new JSONObject(result);
 						JSONObject jsonUser = jObj.getJSONObject("user");
-						Log.i("DAV", "registerUser_success: " + jObj.getString("success"));
-						Log.i("DAV", "registerUser_error: " + jObj.getString("error"));
 						if (jObj.getString("success").equals("1")) {
 							Log.i("DAV", "registerUser_name: " + jsonUser.getString("name"));
 							Log.i("DAV", "registerUser_email: " + jsonUser.getString("email"));
@@ -287,18 +285,49 @@ public final class DBConnector {
 		if (isOnline()) {
 			// Rating in die lokale DB schreiben
 			Route r = this.getRoute(new Route(routeId));
-			Rating a = new Rating(rating, howClimbed, categorie, this.getUser(new User(userId)), r, true); // Rating zum Speichern in die Datenbank anlegen
-			db.store(a); // Rating in der lokalen DB speichern
-			r.setAverageRating(this.getAvarageRouteRating(r, rating));
-			if (howClimbed.equals("Flash")) {
-				r.setFlashCount(r.getFlashCount() + 1);
-			} else if (howClimbed.equals("Rotpunkt")) {
-				r.setRedpointCount(r.getRedpointCount() + 1);
+			
+			Rating a = getRating(new Rating(r, this.getUser(new User(userId))));
+			if(a != null) {
+				String oldHowClimbed = a.getHowClimbed();
+				a.setRating(rating);
+				a.setCategorie(categorie);
+				a.setHowClimbed(howClimbed);
+				db.store(a);
+				
+				// Altes howClimbed wieder abziehen
+				if (oldHowClimbed.equals("Flash")) {
+					r.setFlashCount(r.getFlashCount() - 1);
+				} else if (oldHowClimbed.equals("Rotpunkt")) {
+					r.setRedpointCount(r.getRedpointCount() - 1);
+				} else {
+					r.setProjectCount(r.getProjectCount() - 1);
+				}
+				
+				// Neues howClimbed draufaddieren
+				r.setAverageRating(this.getAvarageRouteRating(r, rating));
+				if (howClimbed.equals("Flash")) {
+					r.setFlashCount(r.getFlashCount() + 1);
+				} else if (howClimbed.equals("Rotpunkt")) {
+					r.setRedpointCount(r.getRedpointCount() + 1);
+				} else {
+					r.setProjectCount(r.getProjectCount() + 1);
+				}
+				r.setPersonalRating(a);
 			} else {
-				r.setProjectCount(r.getProjectCount() + 1);
+				a = new Rating(rating, howClimbed, categorie, this.getUser(new User(userId)), r, true); // Rating zum Speichern in die Datenbank anlegen
+				db.store(a); // Rating in der lokalen DB speichern
+				
+				r.setAverageRating(this.getAvarageRouteRating(r, rating));
+				if (howClimbed.equals("Flash")) {
+					r.setFlashCount(r.getFlashCount() + 1);
+				} else if (howClimbed.equals("Rotpunkt")) {
+					r.setRedpointCount(r.getRedpointCount() + 1);
+				} else {
+					r.setProjectCount(r.getProjectCount() + 1);
+				}
+				r.setRatingCount(r.getRatingCount() + 1);
+				r.setPersonalRating(a);
 			}
-			r.setRatingCount(r.getRatingCount() + 1);
-			r.setPersonalRating(a);
 			db.store(r);
 
 			// Rating in die entfernte DB schreiben
@@ -424,10 +453,8 @@ public final class DBConnector {
 			rating = route.getAverageRating();
 			ratingList.add(ratingNumber);
 		}
-		Log.i("DAV", "Rating1: " + ratingList.get(0) + " Rating2: " + ratingList.get(1) + " RatingCount: " + route.getRatingCount());
 		int ratingCount = route.getRatingCount() + 1;
 		avarageRating = (ratingList.get(0) + (ratingList.get(1) * ratingCount)) / (ratingCount + 1);
-		Log.i("DAV", "avarageRating: " + avarageRating);
 		float y = avarageRating - (int) avarageRating;
 		String newAvarageRating = null;
 		if ((y >= 0) && (y <= 0.15))
